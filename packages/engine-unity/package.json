@@ -1,0 +1,25 @@
+{
+  "name": "@prekladyher/engine-unity",
+  "version": "1.0.0",
+  "description": "Unity engine asset manipulation scripts.",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "files": [
+    "dist/*"
+  ],
+  "dependencies": {
+    "@prekladyher/engine-base": "*",
+    "commander": "^9.2.0",
+    "jsonpath-plus": "^6.0.1"
+  },
+  "scripts": {
+    "build": "rm -rf dist/ && tsc",
+    "cli": "node command.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/pavelhoral/l10n-toolbox.git"
+  },
+  "keywords": [],
+  "license": "ISC"
+}
