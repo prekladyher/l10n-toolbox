@@ -23,7 +23,10 @@ export function nativeType(size: number, type: NativeType): TypeHandler<unknown>
   const decoder = Buffer.prototype['read' + type];
   const encoder = Buffer.prototype['write' + type];
   return {
-    decode: (buffer: Buffer, offset: number) => [size, decoder.call(buffer, offset)],
+    decode: (buffer: Buffer, offset: number) => [
+      size,
+      decoder.call(buffer, offset)
+    ],
     encode: (value: unknown) => {
       const buffer = Buffer.alloc(size);
       encoder.call(buffer, value);
@@ -31,5 +34,3 @@ export function nativeType(size: number, type: NativeType): TypeHandler<unknown>
     }
   };
 }
-
-

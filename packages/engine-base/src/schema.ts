@@ -1,7 +1,26 @@
 /**
  * Type dictionary aka. schema.
  */
-export type Schema = Record<string, SchemaEntry>;
+export type Schema = Record<string, SchemaEntryFn | SchemaEntry>;
+
+/**
+ * Schema flags to support different file versions.
+ */
+export type SchemaFlags = Record<string, boolean>;
+
+/**
+ * Schema entry factory function.
+ */
+export interface SchemaEntryFn {
+
+  /**
+   * Create schema entry based on the provided flags.
+   * @param flags Schema version flags.
+   * @return Created schema entry.
+   */
+  (flags: SchemaFlags): SchemaEntry;
+
+}
 
 /**
  * Single type definition.

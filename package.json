@@ -1,4 +1,5 @@
 {
+  "name": "@prekladyher/l10n-toolbox",
   "private": true,
   "devDependencies": {
     "@tsconfig/node16": "^1.0.2",
@@ -12,6 +13,7 @@
     "typescript": "^4.6.4"
   },
   "dependencies": {
+    "node": "17.7.2",
     "commander": "^9.2.0",
     "jsonpath-plus": "^6.0.1"
   },

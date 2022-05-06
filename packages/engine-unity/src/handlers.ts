@@ -1,21 +1,19 @@
-import { calcPadding, nativeType, ObjectSchema, Schema, StructSchema, TypeHandler, TypeResolver } from '@prekladyher/engine-base';
+import { calcPadding, nativeType, ObjectSchema, Schema, SchemaEntry, SchemaFlags, StructSchema, TypeHandler, TypeResolver } from '@prekladyher/engine-base';
 
 /**
  * Create type resolver based on the given schema (type dictionary).
- * @return {TypeResolver} Type resolver for the given schema.
  */
-export function createResolver(schema: Schema): TypeResolver  {
-  const factory: TypeResolver = (key: string) => {
-    if (key.endsWith('[]')) {
-      return arrayType(factory(key.substring(0, key.length - 2)));
-    }
-    const def = schema[key];
-    if (def) {
-      return Array.isArray(def) ? structType(def, factory) : objectType(def, factory);
-    }
+export function createResolver(schema: Schema, flags: SchemaFlags = {}): TypeResolver  {
+  const resolveEntry = (entry: SchemaEntry) => {
+    return Array.isArray(entry) ? structType(entry, resolve) : objectType(entry, resolve);
+  }
+  const resolveArray = (key: string) => {
+    return arrayType(key.substring(0, key.length - 2), resolve);
+  };
+  const resolveBasic = (key: string) => {
     switch (key) {
       case 'int': return nativeType(4, 'Int32LE');
-      case 'uint8': return nativeType(1, 'UInt8');
+      case 'uint8': return nativeType(4, 'UInt8');
       case 'uint32': return nativeType(4, 'UInt32LE');
       case 'uint64': return nativeType(8, 'BigUInt64LE');
       case 'float': return nativeType(4, 'FloatLE');
@@ -24,7 +22,20 @@ export function createResolver(schema: Schema): TypeResolver  {
         throw new Error(`Unable to resolve type: ${key}`);
     }
   };
-  return factory;
+  const resolve: TypeResolver = (key: string) => {
+    if (key.endsWith('[]')) {
+      return resolveArray(key);
+    }
+    const entry = schema[key];
+    if (typeof entry === "function") {
+      return resolveEntry(entry(flags));
+    }
+    if (entry) {
+      return resolveEntry(entry);
+    }
+    return resolveBasic(key);
+  };
+  return resolve;
 }
 
 /**
@@ -51,7 +62,8 @@ export function stringType(): TypeHandler<string> {
 /**
  * Create handler for array type with the specified item type handler.
  */
-export function arrayType<T>(itemType: TypeHandler<T>): TypeHandler<T[]> {
+export function arrayType(itemKey: string, resolve: TypeResolver): TypeHandler<unknown[]> {
+  const itemType = itemKey === "uint8" ? nativeType(1, "UInt8") : resolve(itemKey);
   return {
     decode: (buffer, offset) => {
       const length = buffer.readUInt32LE(offset);

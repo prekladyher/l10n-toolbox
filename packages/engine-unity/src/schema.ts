@@ -1,3 +1,5 @@
+import { SchemaFlags } from "@prekladyher/engine-base/dist";
+
 /**
  * Base Unity/MonoScript types.
  */
@@ -41,6 +43,9 @@ const BaseScript = {
 
 /**
  * LanguageSourceAsset types.
+ *
+ * Verified engines and games:
+ * - Unity 5.4.10 / Disco Elysium: Final Cut
  */
 const LanguageSourceAsset = {
   LanguageSourceAsset: [
@@ -68,9 +73,10 @@ const LanguageSourceAsset = {
     { name: "GoogleUpdateDelay", type: "float", value: 0 },
     { name: "Assets", type: "PPtr[]" },
   ],
-  TermData: [
+  TermData: (flags: SchemaFlags) => [
     { name: "Term", type: "string" },
     { name: "TermType", type: "int" },
+    ...(flags["TermData.Description"] ? [{ name: "Description", type: "string" }] : []),
     { name: "Languages", type: "string[]" },
     { name: "Flags", type: "uint8[]" },
     { name: "Languages_Touch", type: "$EmptyArray" },
