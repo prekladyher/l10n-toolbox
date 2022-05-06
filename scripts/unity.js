@@ -1,7 +1,6 @@
 const fs = require('fs').promises;
 const { program } = require('commander');
-const { decodeAsset } = './dist/utils.js';
-const schema = require('./dist/schema.js');
+const { schema, decodeAsset } = require('@prekladyher/engine-unity');
 
 const INSPECT_OPTS = {
   depth: null,

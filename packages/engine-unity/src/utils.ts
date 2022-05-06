@@ -10,5 +10,9 @@ import { createResolver } from "./handlers";
  */
 export function decodeAsset(schema: Schema, type: string, source: Buffer): unknown {
   const resolve = createResolver(schema);
-  return resolve(type).decode(source, 0)[1];
+  const handler = resolve(type);
+  if (!handler) {
+    throw new Error(`Unknown type ${type}`);
+  }
+  return handler.decode(source, 0)[1];
 }
