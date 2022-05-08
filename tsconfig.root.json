@@ -1,18 +1,18 @@
 {
-    "extends": "@tsconfig/node16/tsconfig.json",
-    "exclude": [
-      "**/*.test.ts",
-      "**/*.stub.ts",
-      "node_modules",
-      "dist"
-    ],
-    "compilerOptions": {
-      "declaration": true,
-      "moduleResolution": "node",
-      "paths": {
-        "@prekladyher/*": [
-          "./packages/*"
-        ]
-      }
+  "extends": "@tsconfig/node16/tsconfig.json",
+  "exclude": [
+    "**/*.spec.ts",
+    "**/*.stub.ts",
+    "node_modules",
+    "dist"
+  ],
+  "compilerOptions": {
+    "declaration": true,
+    "moduleResolution": "node",
+    "paths": {
+      "@prekladyher/*": [
+        "./packages/*"
+      ]
     }
   }
+}

@@ -1,6 +1,8 @@
-const fs = require('fs').promises;
+const fs = require('fs');
 const { program } = require('commander');
-const { schema, createResolver, decodeAsset } = require('@prekladyher/engine-unity');
+
+const { withFileSource, withFileSink } = require('@prekladyher/engine-base');
+const { createResolver, createSchema } = require('@prekladyher/engine-unity');
 
 const INSPECT_OPTS = {
   depth: null,
@@ -15,33 +17,47 @@ program
   .name('unity')
   .description('Handling Unity engine files');
 
-program.command('read')
-  .description('Extract Unity script data into JSON model')
-  .argument('<type>', 'asset data type (e.g. LanguageSourceAsset)')
-  .argument('<file>', 'script data file')
-  .option('-f, --flags <path>', 'JSON file with schema flags')
-  .option('-p, --path <path>', 'JSON path transform (e.g. $.mSource.mTerms[*].Term)')
-  .option('-d, --depth <depth>', 'inspection path depth')
+program
+  .command('read')
+  .description('Extract Unity asset data into JSON-like model')
+  .requiredOption('-i, --input <path>', 'input data file')
+  .requiredOption('-t, --type <type>', 'asset data type (e.g. LanguageSourceAsset)')
+  .option('-f, --flags <path>', 'JSON file with schema flags',
+    value => JSON.stringify(fs.readFileSync(value, { encoding: "utf8"})),
+    {})
+  .option('-s, --select <path>', 'JSON path transform (e.g. $.mSource.mTerms[*].Term)')
+  .option('-d, --depth <depth>', 'inspection path depth',
+    value => parseInt(options.depth, 10),
+    Infinity)
   .option('-j, --json', 'return as valid raw JSON')
-  .action(async (type, file, options) => {
-    let flags = {};
-    if (options.flags) {
-      flags = JSON.parse((await fs.readFile(options.flags)).toString());
-    }
-    let decoded = decodeAsset(type, await fs.readFile(file), createResolver(schema, flags));
-    if (options.path) {
-      const { JSONPath } = await import('jsonpath-plus');
-      decoded = JSONPath({ path: options.path, json: decoded });
-    }
-    if (options.json) {
-      BigInt.prototype.toJSON = function() { return Number(this); };
-      console.log(JSON.stringify(decoded, null, '  '));
+  .action(({ input, type, flags, select, depth, json }) => {
+    const value = withFileSource(input, source => {
+      const resolve = createResolver(createSchema(flags));
+      return resolve(type).read(source);
+    });
+    const result = select ?
+      require('jsonpath-plus').JSONPath({ path: select, json: value }) : value;
+    if (json) {
+      console.log(JSON.stringify(result, null, '  '));
     } else {
-      console.dir(decoded, {
-        ...INSPECT_OPTS,
-        depth: options.depth !== undefined ? parseInt(options.depth, 10) : Infinity,
-      });
+      console.dir(result, { ...INSPECT_OPTS, depth });
     }
+  });
+
+program.command('write')
+  .description('Write Unity asset JSON as asset data file')
+  .requiredOption('-i, --input <path>', 'input JSON file')
+  .requiredOption('-t, --type <type>', 'asset data type (e.g. LanguageSourceAsset)')
+  .requiredOption('-o, --output <path>', 'output asset file')
+  .option('-f, --flags <path>', 'JSON file with schema flags',
+    value => JSON.stringify(fs.readFileSync(value, { encoding: "utf8"})),
+    {})
+  .action(({ input, output, type, flags }) => {
+    const value = JSON.parse(fs.readFileSync(input, { encoding: "utf8" }));
+    withFileSink(output, sink => {
+      const resolve = createResolver(createSchema(flags));
+      resolve(type).write(value).forEach(buffer => sink.write(buffer));
+    });
   });
 
 program.parse();
