@@ -17,7 +17,8 @@ module.exports = {
     '@typescript-eslint'
   ],
   rules: {
-    semi: ["error", "always"],
+    "semi": "off",
+    "@typescript-eslint/semi": ["error"],
     indent: ["error", 2, { "SwitchCase": 1 }],
     "no-trailing-spaces": "error"
   },

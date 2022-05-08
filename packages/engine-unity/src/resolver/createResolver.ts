@@ -6,6 +6,7 @@ const MAX_SAFE_INTEGER = BigInt(Number.MAX_SAFE_INTEGER);
 /**
  * Resolve basic type key.
  */
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 function resolveBasic(key: string): TypeHandler<any> {
   switch (key) {
     case 'int': return defineNative(4,
@@ -35,7 +36,7 @@ function resolveBasic(key: string): TypeHandler<any> {
 /**
  * Create type resolver based on the given schema (type dictionary).
  */
- export function createResolver(schema: Schema): TypeResolver  {
+export function createResolver(schema: Schema): TypeResolver  {
   const resolve: TypeResolver = (key: string) => {
     if (key.endsWith('[]')) {
       return defineArray(key.substring(0, key.length - 2), resolve);

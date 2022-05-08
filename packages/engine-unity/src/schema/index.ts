@@ -4,7 +4,7 @@ import { default as LanguageSourceAsset } from './LanguageSourceAsset';
 
 export function createSchema(flags: SchemaFlags): Schema {
   return {
-    ...BaseScript(flags),
+    ...BaseScript(),
     ...LanguageSourceAsset(flags)
   };
 }

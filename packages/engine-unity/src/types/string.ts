@@ -3,7 +3,7 @@ import { calcPadding, TypeHandler } from '@prekladyher/engine-base';
 /**
  * Create handler for UTF-8 string type.
  */
- export function defineString(): TypeHandler<string> {
+export function defineString(): TypeHandler<string> {
   return {
     read: source => {
       const length = source.read(4).readUInt32LE();

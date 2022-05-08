@@ -1,4 +1,4 @@
-import { Schema, SchemaEntry, SchemaEntryFn, SchemaFlags, StructSchema } from '@prekladyher/engine-base';
+import { Schema, SchemaEntryFn, SchemaFlags, StructSchema } from '@prekladyher/engine-base';
 
 const LanguageSourceAsset: StructSchema = [
   { name: "m_GameObject", type: "Base" },

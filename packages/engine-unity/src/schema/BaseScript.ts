@@ -1,4 +1,4 @@
-import { Schema, SchemaEntry, SchemaFlags, StructSchema } from '@prekladyher/engine-base';
+import { Schema, StructSchema } from '@prekladyher/engine-base';
 
 // Helper type for unknown array types
 const $EmptyArray: StructSchema = [
@@ -44,7 +44,7 @@ const PersistentCallGroup: StructSchema = [
   { name: 'm_Calls', type: '$EmptyArray' }
 ];
 
-export default function createSchema(flags: SchemaFlags): Schema {
+export default function createSchema(): Schema {
   return {
     $EmptyArray,
     Base,

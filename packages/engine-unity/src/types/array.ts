@@ -19,7 +19,7 @@ function defineUint8Array(): TypeHandler<unknown[]> {
       Buffer.from(values as number[]).copy(buffer, 4);
       return [buffer];
     }
-  }
+  };
 }
 
 /**

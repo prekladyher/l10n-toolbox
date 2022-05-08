@@ -15,6 +15,7 @@ export default interface TypeResolver {
    * @param key Type lookup key (exact format is implementation specific).
    * @return Resolved type handler.
    */
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   (key: TypeKey): TypeHandler<any>;
 
 }

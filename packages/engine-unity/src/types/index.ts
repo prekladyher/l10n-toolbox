@@ -1,3 +1,3 @@
-export * from './array'
-export * from './string'
+export * from './array';
+export * from './string';
 

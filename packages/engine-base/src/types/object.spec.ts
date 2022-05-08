@@ -7,8 +7,8 @@ describe('struct', () => {
   function resolve(key: string) {
     switch (key) {
       case 'uint8': return defineNative(1,
-          buffer => buffer.readUInt8(),
-          (buffer, value) => buffer.writeUInt8(value));
+        buffer => buffer.readUInt8(),
+        (buffer, value) => buffer.writeUInt8(value));
       default:
         fail(`Invalid type request ${key}`);
     }

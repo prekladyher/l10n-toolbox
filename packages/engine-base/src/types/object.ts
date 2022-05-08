@@ -6,7 +6,7 @@ import TypeResolver from './TypeResolver';
 /**
  * Create handler for custom object type.
  */
- export function defineObject(schema: ObjectSchema, resolve: TypeResolver): TypeHandler<unknown> {
+export function defineObject(schema: ObjectSchema, resolve: TypeResolver): TypeHandler<unknown> {
   const layout = defineStruct(schema.layout, resolve);
   return {
     read: source => {

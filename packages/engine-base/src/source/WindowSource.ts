@@ -9,7 +9,7 @@ export default class WindowSource implements DataSource {
   }
 
   read(length: number): Buffer {
-    this.size -= length
+    this.size -= length;
     if (this.size < 0) {
       throw new Error('EOF');
     }

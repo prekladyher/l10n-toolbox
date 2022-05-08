@@ -27,7 +27,7 @@ program
     {})
   .option('-s, --select <path>', 'JSON path transform (e.g. $.mSource.mTerms[*].Term)')
   .option('-d, --depth <depth>', 'inspection path depth',
-    value => parseInt(options.depth, 10),
+    value => parseInt(value, 10),
     Infinity)
   .option('-j, --json', 'return as valid raw JSON')
   .action(({ input, type, flags, select, depth, json }) => {

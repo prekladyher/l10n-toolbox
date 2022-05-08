@@ -1,4 +1,4 @@
-import { DataSource, FileSource } from '../source';
+import { FileSource } from '../source';
 
 /**
  * Execute task with data source for the specified filename.
