@@ -10,10 +10,11 @@ You must install dependencies and compile TypeScript sources before running any 
 npm install && npm run build -ws
 ```
 
-After this step you can run scripts via `npm exec`. Simply call `help` command on any script to discover its capabilities:
+After this step you can run NodeJS scripts in `scripts/` directory. Simply call `help` command
+on any script to discover its capabilities:
 
 ```bash
-npm exec -- node scripts/unity.js help
+node scripts/unity.js help
 ```
 
 ### Example Invocations
@@ -21,11 +22,11 @@ npm exec -- node scripts/unity.js help
 Extract language data from Disco Elysium's asset:
 
 ```bash
-npm exec -- node scripts/unity.js read -j -t LanguageSourceAsset -i GeneralLockitEnglish.dat > General.json
+node scripts/unity.js read -j -t LanguageSourceAsset -i GeneralLockitEnglish.dat > General.json
 ```
 
 Generate back asset from the JSON file:
 
 ```
-npm exec -- node scripts/unity.js read -j -t LanguageSourceAsset -i General.json -o GeneralLockitCustom.dat
+node scripts/unity.js write -j -t LanguageSourceAsset -i General.json -o GeneralLockitCustom.dat
 ```

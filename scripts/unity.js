@@ -23,7 +23,7 @@ program
   .requiredOption('-i, --input <path>', 'input data file')
   .requiredOption('-t, --type <type>', 'asset data type (e.g. LanguageSourceAsset)')
   .option('-f, --flags <path>', 'JSON file with schema flags',
-    value => JSON.stringify(fs.readFileSync(value, { encoding: "utf8"})),
+    value => JSON.parse(fs.readFileSync(value, { encoding: "utf8"})),
     {})
   .option('-s, --select <path>', 'JSON path transform (e.g. $.mSource.mTerms[*].Term)')
   .option('-d, --depth <depth>', 'inspection path depth',
@@ -50,7 +50,7 @@ program.command('write')
   .requiredOption('-t, --type <type>', 'asset data type (e.g. LanguageSourceAsset)')
   .requiredOption('-o, --output <path>', 'output asset file')
   .option('-f, --flags <path>', 'JSON file with schema flags',
-    value => JSON.stringify(fs.readFileSync(value, { encoding: "utf8"})),
+    value => JSON.parse(fs.readFileSync(value, { encoding: "utf8"})),
     {})
   .action(({ input, output, type, flags }) => {
     const value = JSON.parse(fs.readFileSync(input, { encoding: "utf8" }));
