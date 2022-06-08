@@ -27,13 +27,31 @@ const LanguageSourceData: StructSchema = [
   { name: "Assets", type: "PPtr[]" },
 ];
 
+// Based on Arkham Horror (not sure why the structure is reordered)
+const LanguageSourceData_Reorder: StructSchema = [
+  { name: "Google_WebServiceURL", type: "string", },
+  { name: "Google_SpreadsheetKey", type: "string" },
+  { name: "Google_SpreadsheetName", type: "string" },
+  { name: "Google_LastUpdatedVersion", type: "string" },
+  { name: "GoogleUpdateFrequency", type: "int" },
+  { name: "GoogleUpdateDelay", type: "float", value: 0 },
+  { name: "mTerms", type: "TermData[]" },
+  { name: "mLanguages", type: "LanguageData[]" },
+  { name: "CaseInsensitiveTerms", type: "uint8" },
+  { name: "Assets", type: "PPtr[]" },
+  { name: "NeverDestroy", type: "uint8" },
+  { name: "UserAgreesToHaveItOnTheScene", type: "uint8", value: 0 },
+  { name: "UserAgreesToHaveItInsideThePluginsFolder", type: "uint8", value: 0 },
+  { name: "OnMissingTranslation", type: "int", value: 1 },
+];
+
 const TermData: SchemaEntryFn = (flags: SchemaFlags) => [
   { name: "Term", type: "string" },
   { name: "TermType", type: "int" },
   ...(flags["TermData.Description"] ? [{ name: "Description", type: "string" }] : []),
   { name: "Languages", type: "string[]" },
   { name: "Flags", type: "uint8[]" },
-  { name: "Languages_Touch", type: "$EmptyArray" },
+  { name: "Languages_Touch", type: "string[]" },
 ];
 
 const LanguageData: StructSchema = [
@@ -45,7 +63,7 @@ const LanguageData: StructSchema = [
 export default function createSchema(flags: SchemaFlags): Schema {
   return {
     LanguageSourceAsset,
-    LanguageSourceData,
+    LanguageSourceData: flags['LanguageSourceAsset.Reorder'] ? LanguageSourceData_Reorder : LanguageSourceData,
     TermData: TermData(flags),
     LanguageData
   };
