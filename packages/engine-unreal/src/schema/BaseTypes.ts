@@ -1,41 +1,15 @@
-import { defineNative, TypeHandler, TypeRegistry } from '@prekladyher/engine-base';
+import { defineNative, TypeHandler, TypeRegistry, wrapBigInt } from '@prekladyher/engine-base';
 import { defineArray, defineGuid, defineString } from '../types';
-
-const MAX_SAFE_INTEGER = BigInt(Number.MAX_SAFE_INTEGER);
 
 export default function registerTypes(): TypeRegistry {
   return {
-    bool: (legacy) => defineNative(legacy ? 4 : 1,
-      legacy
-        ? buffer => buffer.readUInt32LE()
-        : buffer => buffer.readUInt8(),
-      legacy
-        ? (buffer, value) => buffer.writeUInt32LE(value as number)
-        : (buffer, value) => buffer.writeUInt8(value as number)),
-    int: () => defineNative(4,
-      buffer => buffer.readInt32LE(),
-      (buffer, value) => buffer.writeInt32LE(value as number)),
-    uint8: () => defineNative(1,
-      buffer => buffer.readUInt8(),
-      (buffer, value) => buffer.writeUInt8(value as number)),
-    uint32: () => defineNative(4,
-      buffer => buffer.readUInt32LE(),
-      (buffer, value) => buffer.writeUInt32LE(value as number)),
-    uint64: () => defineNative(8,
-      buffer => {
-        const value = buffer.readBigUInt64LE();
-        return value <= MAX_SAFE_INTEGER ? Number(value) : value;
-      },
-      (buffer, value) => buffer.writeBigUInt64LE(typeof value === 'bigint' ? value : BigInt(value as number))),
-    int64: () => defineNative(8,
-      buffer => {
-        const value = buffer.readBigInt64LE();
-        return value <= MAX_SAFE_INTEGER ? Number(value) : value;
-      },
-      (buffer, value) => buffer.writeBigInt64LE(typeof value === 'bigint' ? value : BigInt(value as number))),
-    float: () => defineNative(4,
-      buffer => buffer.readFloatLE(),
-      (buffer, value) => buffer.writeFloatLE(value as number)),
+    bool: (legacy) => legacy ? defineNative('UInt32LE') : defineNative('UInt8'),
+    int32: () => defineNative('Int32LE'),
+    uint8: () => defineNative('UInt8'),
+    uint32: () => defineNative('UInt32LE'),
+    uint64: () => wrapBigInt(defineNative('UInt64LE')),
+    int64: () => wrapBigInt(defineNative('Int64LE')),
+    float: () => defineNative('FloatLE'),
     array: (config) => defineArray(config as TypeHandler<unknown>) as TypeHandler<unknown>,
     string: () => defineString(),
     guid: () => defineGuid(),
