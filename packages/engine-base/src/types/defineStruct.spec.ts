@@ -1,6 +1,6 @@
 import { BufferSource } from '../source';
-import { defineNative } from './native';
-import { defineStruct } from './struct';
+import { defineNative } from './defineNative';
+import { defineStruct } from './defineStruct';
 
 describe('struct', () => {
 

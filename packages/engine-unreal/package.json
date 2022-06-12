@@ -1,0 +1,22 @@
+{
+  "name": "@prekladyher/engine-unreal",
+  "version": "1.0.0",
+  "description": "Unreal Engine asset manipulation scripts.",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "files": [
+    "dist/*"
+  ],
+  "dependencies": {
+    "@prekladyher/engine-base": "*"
+  },
+  "scripts": {
+    "build": "rm -rf dist/ && tsc"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/prekladyher/l10n-toolbox.git"
+  },
+  "keywords": [],
+  "license": "ISC"
+}

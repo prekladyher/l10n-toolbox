@@ -12,6 +12,7 @@ export function defineString(): TypeHandler<string> {
       return value;
     },
     write: value => {
+      if (typeof value !== 'string') throw Error(`Invalid value type: ${typeof value}`);
       const string = Buffer.from(value);
       const length = Buffer.alloc(4);
       length.writeUInt32LE(string.length);

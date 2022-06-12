@@ -1,5 +1,7 @@
-export { default as TypeHandler } from './TypeHandler';
-export { default as TypeResolver } from './TypeResolver';
-export * from './native';
-export * from './struct';
-export * from './object';
+export * from './TypeHandler';
+export * from './TypeResolver';
+export * from './TypeRegistry';
+export * from './defineNative';
+export * from './defineStruct';
+export * from './defineObject';
+export * from './createResolver';

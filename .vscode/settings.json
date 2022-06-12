@@ -1,0 +1,6 @@
+{
+  "typescript.preferences.quoteStyle": "single",
+  "cSpell.enableFiletypes": [
+    "!typescript"
+  ]
+}

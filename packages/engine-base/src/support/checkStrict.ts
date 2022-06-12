@@ -1,4 +1,4 @@
-import { StructAssertFn, StructMemberSchema } from '../schema';
+import { StructAssertFn, StructMemberSchema } from '../types/defineStruct';
 
 /**
  * Struct property assertion that checks parsed value using strict equality.

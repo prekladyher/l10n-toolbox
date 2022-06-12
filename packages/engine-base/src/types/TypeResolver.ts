@@ -1,4 +1,4 @@
-import TypeHandler from './TypeHandler';
+import { TypeHandler } from './TypeHandler';
 
 /**
  * Type lookup key (type name with additional parameters).
@@ -8,7 +8,7 @@ export type TypeKey = string;
 /**
  * Type handler resolver.
  */
-export default interface TypeResolver {
+export interface TypeResolver {
 
   /**
    * Function responsible for resolving serialized type tag to a type handler.

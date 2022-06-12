@@ -17,21 +17,21 @@ export interface ReadFn<T> {
 /**
  * Type serializer function.
  */
-export interface WriteFn<T> {
+export interface WriteFn {
 
   /**
    * Write type value as one or more binary buffers.
    * @param value Value to serialize, i.e. convert to byte buffer(s).
    * @return Serialized type value in one or more byte buffers.
    */
-  (value: T): Buffer[];
+  (value: unknown): Buffer[];
 
 }
 
 /**
  * Type handler capable of serializing and deserializing values of specific type.
  */
-export default interface TypeHandler<T> {
+export interface TypeHandler<T> {
 
   /**
    * Type deserializer method.
@@ -41,6 +41,6 @@ export default interface TypeHandler<T> {
   /**
    * Type serializer method.
    */
-  write: WriteFn<T>;
+  write: WriteFn;
 
 }

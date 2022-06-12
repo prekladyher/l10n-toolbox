@@ -4,5 +4,8 @@ node_modules/
 # Build artifacts
 dist/
 
+# Work directory
+work/
+
 # Dotenv environment variable files
 .env

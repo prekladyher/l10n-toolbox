@@ -1,6 +1,6 @@
 import { BufferSource } from '../source';
-import { defineNative } from './native';
-import { defineObject } from './object';
+import { defineNative } from './defineNative';
+import { defineObject } from './defineObject';
 
 describe('struct', () => {
 
@@ -19,8 +19,8 @@ describe('struct', () => {
   it('handle object', () => {
     const type = defineObject({
       layout: [
-        { name: "foo", type: "uint8" },
-        { name: "bar", type: "uint8" }
+        { name: 'foo', type: 'uint8' },
+        { name: 'bar', type: 'uint8' }
       ],
       restore: loaded => loaded,
       persist: object => object as object

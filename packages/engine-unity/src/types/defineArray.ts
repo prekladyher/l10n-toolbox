@@ -1,5 +1,4 @@
-import { TypeResolver, TypeHandler, calcPadding } from '@prekladyher/engine-base';
-import { TypeKey } from '@prekladyher/engine-base/dist/types/TypeResolver';
+import { TypeKey, TypeResolver, TypeHandler, calcPadding } from '@prekladyher/engine-base';
 
 /**
  * Create special case array handler for compacted UInt8 arrays.
@@ -13,6 +12,7 @@ function defineUint8Array(): TypeHandler<unknown[]> {
       return values;
     },
     write: values => {
+      if (!Array.isArray(values)) throw new Error(`Invalid value type: ${typeof values}`);
       const length = values.length;
       const buffer = Buffer.alloc(4 + length + calcPadding(length));
       buffer.writeUInt32LE(length);
@@ -26,7 +26,7 @@ function defineUint8Array(): TypeHandler<unknown[]> {
  * Create handler for array type with the specified item type.
  */
 export function defineArray(itemKey: TypeKey, resolve: TypeResolver): TypeHandler<unknown[]> {
-  if (itemKey === "uint8") {
+  if (itemKey === 'uint8') {
     return defineUint8Array();
   }
   const itemType = resolve(itemKey);
@@ -40,11 +40,14 @@ export function defineArray(itemKey: TypeKey, resolve: TypeResolver): TypeHandle
       return values;
     },
     write: values => {
+      if (!Array.isArray(values)) throw new Error(`Invalid value type: ${typeof values}`);
       const length = Buffer.alloc(4);
-      length.writeUInt32LE(values.length);
+      length.writeUInt32LE(values.length || 0);
       const buffers = [length];
-      for (const value of values) {
-        buffers.push(...itemType.write(value));
+      if (values) {
+        for (const value of values) {
+          buffers.push(...itemType.write(value));
+        }
       }
       return buffers;
     }
