@@ -5,30 +5,32 @@ import { TypeResolver } from './TypeResolver';
 /**
  * Mapped object type schema.
  */
-export interface ObjectSchema {
+export interface ObjectSchema<S, T, L = StructSchema | TypeHandler<S>> {
 
   /**
-   * Struct defining object state layout.
+   * Persisted object state layout.
    */
-  layout: StructSchema;
+  layout: L;
 
   /**
-   * Restore object state from loaded data.
+   * Restore object state from loaded state.
    */
-  restore: (loaded: object) => unknown;
+  restore: (loaded: L extends StructSchema ? Record<string, unknown> : S) => T;
 
   /**
-   * Persist object state.
+   * Convert object to it's persisted state.
    */
-  persist: (object: unknown) => object;
+  persist: (object: unknown) => S;
 
 }
 
 /**
  * Create handler for custom object type.
  */
-export function defineObject(schema: ObjectSchema, resolve: TypeResolver): TypeHandler<unknown> {
-  const layout = defineStruct(schema.layout, resolve);
+export function defineObject<T, S>(schema: ObjectSchema<S, T>, resolve: TypeResolver): TypeHandler<T> {
+  const layout = Array.isArray(schema.layout)
+    ? defineStruct(schema.layout, resolve)
+    : schema.layout as TypeHandler<S>;
   return {
     read: source => {
       const value = layout.read(source);

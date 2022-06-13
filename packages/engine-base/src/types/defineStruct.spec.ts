@@ -1,26 +1,23 @@
 import { BufferSource } from '../source';
+import { createResolver } from './createResolver';
 import { defineNative } from './defineNative';
 import { defineStruct } from './defineStruct';
 
 describe('struct', () => {
 
-  function resolve(key: string) {
-    switch (key) {
-      case 'uint8': return defineNative('UInt8');
-      case 'uint32': return defineNative('UInt32LE');
-      default: fail(`Invalid type request ${key}`);
-    }
-  }
+  const resolve = createResolver({
+    uint8: () => defineNative('UInt8'),
+    uint32: () => defineNative('UInt32LE')
+  });
 
-  const TEST_DATA = Buffer.from([1, 0, 0, 0, 2, 0, 0, 0]);
+  const TEST_DATA = Buffer.from([1, 0, 0, 0, 2, 3, 4, 5]);
 
   it('handle named struct', () => {
     const type = defineStruct([
       { name: 'foo', type: 'uint32' },
       { name: 'bar', type: 'uint8' }
     ], resolve);
-    expect(type.read(new BufferSource(TEST_DATA)))
-      .toEqual({ foo: 1, bar: 2 });
+    expect(type.read(new BufferSource(TEST_DATA))).toEqual({ foo: 1, bar: 2 });
   });
 
   it('handle unnamed struct', () => {
@@ -38,6 +35,14 @@ describe('struct', () => {
     ], resolve);
     expect(type.read(new BufferSource(TEST_DATA))).toEqual({ foo: 1 });
     expect(assert).toHaveBeenCalledWith(1, expect.anything());
+  });
+
+  it('handle direct type', () => {
+    const type = defineStruct([
+      { name: 'foo', type: defineNative('UInt32LE') },
+      { name: 'bar', type: defineNative('UInt8') },
+    ], resolve);
+    expect(type.read(new BufferSource(TEST_DATA))).toEqual({ foo: 1, bar: 2 });
   });
 
 });
