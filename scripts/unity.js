@@ -30,14 +30,17 @@ program
     value => parseInt(value, 10),
     Infinity)
   .option('-j, --json', 'return as valid raw JSON')
-  .action(({ input, type, config, select, depth, json }) => {
+  .option('-o, --output <path>', 'write to file instead of stdout')
+  .action(({ input, type, config, select, depth, json, output }) => {
     const value = withFileSource(input, source => {
       const resolve = createResolver(registerTypes(config));
       return resolve(type).read(source);
     });
     const result = select ?
       require('jsonpath-plus').JSONPath({ path: select, json: value }) : value;
-    if (json) {
+    if (output) {
+      fs.writeFileSync(output, JSON.stringify(result, null, '  '));
+    } else if (json) {
       console.log(JSON.stringify(result, null, '  '));
     } else {
       console.dir(result, { ...INSPECT_OPTS, depth });

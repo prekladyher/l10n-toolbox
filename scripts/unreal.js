@@ -25,20 +25,22 @@ program
   .option('-c, --config <path>', 'JSON file with engine config options',
     value => JSON.parse(fs.readFileSync(value, { encoding: "utf8"})),
     {})
-  // TODO
-  // .option('-s, --select <path>', 'JSON path transform (e.g. $.mSource.mTerms[*].Term)')
+  .option('-s, --select <path>', 'JSON path transform (e.g. $.MagicNumber)')
   .option('-d, --depth <depth>', 'inspection path depth',
     value => parseInt(value, 10),
     Infinity)
   .option('-j, --json', 'return as valid raw JSON')
-  .action(({ input, type, config, select, depth, json }) => {
+  .option('-o, --output <path>', 'write to file instead of stdout')
+  .action(({ input, type, config, select, depth, json, output }) => {
     const value = withFileSource(input, source => {
       const resolve = createResolver(registerTypes(config));
       return resolve(type).read(source);
     });
     const result = select ?
       require('jsonpath-plus').JSONPath({ path: select, json: value }) : value;
-    if (json) {
+    if (output) {
+      fs.writeFileSync(output, JSON.stringify(result, null, '  '));
+    } else if (json) {
       console.log(JSON.stringify(result, null, '  '));
     } else {
       console.dir(result, { ...INSPECT_OPTS, depth });
