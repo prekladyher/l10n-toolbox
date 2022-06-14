@@ -1,6 +1,6 @@
 {
   "name": "@prekladyher/engine-unreal",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "Unreal Engine asset manipulation scripts.",
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
