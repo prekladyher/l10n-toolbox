@@ -3,7 +3,7 @@ import { TypeHandler } from '@prekladyher/engine-base';
 /**
  * Create handler for array type with the specified item type.
  */
-export function defineArray(itemType: TypeHandler<unknown>): TypeHandler<unknown[]> {
+export function defineArray<T>(itemType: TypeHandler<T>): TypeHandler<T[]> {
   return {
     read: source => {
       const length = source.read(4).readUInt32LE();

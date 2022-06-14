@@ -3,7 +3,7 @@ import { TypeKey, TypeResolver, TypeHandler, calcPadding } from '@prekladyher/en
 /**
  * Create special case array handler for compacted UInt8 arrays.
  */
-function defineUint8Array(): TypeHandler<unknown[]> {
+function defineUint8Array(): TypeHandler<number[]> {
   return {
     read: source => {
       const length = source.read(4).readUInt32LE();

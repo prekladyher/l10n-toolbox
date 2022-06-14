@@ -1,3 +1,5 @@
+import { string } from 'yargs';
+import { DataSource } from '../source';
 import { TypeHandler } from './TypeHandler';
 import { TypeFactory } from './TypeRegistry';
 import { TypeResolver, TypeKey } from './TypeResolver';
@@ -49,10 +51,13 @@ export interface StructAssertFn {
 
 }
 
+// This is the best we can do, unfortunately
+type StructType = Record<string, unknown>;
+
 /**
  * Create handler for struct (fixed layout) type.
  */
-export function defineStruct(schema: StructSchema, resolve: TypeResolver): TypeHandler<Record<string, unknown>> {
+export function defineStruct<R = StructType>(schema: StructSchema, resolve: TypeResolver): TypeHandler<R> {
   const handlers = schema.map(member => typeof member.type === 'string' ? resolve(member.type) : member.type);
   return {
     read: source => {
@@ -68,7 +73,7 @@ export function defineStruct(schema: StructSchema, resolve: TypeResolver): TypeH
           result[member.name] = value;
         }
       }
-      return result;
+      return result as R;
     },
     write: struct => {
       if (!struct || typeof struct !== 'object') {
@@ -87,6 +92,6 @@ export function defineStruct(schema: StructSchema, resolve: TypeResolver): TypeH
 /**
  * Create struct based type factory with the given schema.
  */
-export function registerStruct(schema: StructSchema): TypeFactory<Record<string, unknown>> {
+export function registerStruct<R = StructType>(schema: StructSchema): TypeFactory<R> {
   return (config, resolve) => defineStruct(schema, resolve);
 }

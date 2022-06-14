@@ -1,11 +1,12 @@
 import { defineStruct, StructSchema } from './defineStruct';
 import { TypeHandler } from './TypeHandler';
+import { TypeFactory } from './TypeRegistry';
 import { TypeResolver } from './TypeResolver';
 
 /**
  * Mapped object type schema.
  */
-export interface ObjectSchema<S, T, L = StructSchema | TypeHandler<S>> {
+export interface ObjectSchema<T, S, L = StructSchema | TypeHandler<S>> {
 
   /**
    * Persisted object state layout.
@@ -15,7 +16,7 @@ export interface ObjectSchema<S, T, L = StructSchema | TypeHandler<S>> {
   /**
    * Restore object state from loaded state.
    */
-  restore: (loaded: L extends StructSchema ? Record<string, unknown> : S) => T;
+  restore: (loaded: S) => T;
 
   /**
    * Convert object to it's persisted state.
@@ -27,17 +28,24 @@ export interface ObjectSchema<S, T, L = StructSchema | TypeHandler<S>> {
 /**
  * Create handler for custom object type.
  */
-export function defineObject<T, S>(schema: ObjectSchema<S, T>, resolve: TypeResolver): TypeHandler<T> {
+export function defineObject<T, S>(schema: ObjectSchema<T, S>, resolve: TypeResolver): TypeHandler<T> {
   const layout = Array.isArray(schema.layout)
     ? defineStruct(schema.layout, resolve)
-    : schema.layout as TypeHandler<S>;
+    : schema.layout;
   return {
     read: source => {
       const value = layout.read(source);
-      return schema.restore(value);
+      return schema.restore(value as S);
     },
     write: value => {
-      return layout.write(schema.persist(value) as Record<string, unknown>);
+      return layout.write(schema.persist(value));
     }
   };
+}
+
+/**
+ * Create object based type factory with the given schema.
+ */
+export function registerObject<T, S>(schema: ObjectSchema<T, S>): TypeFactory<T> {
+  return (config, resolve) => defineObject(schema, resolve);
 }
