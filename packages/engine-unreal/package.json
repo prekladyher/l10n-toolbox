@@ -11,7 +11,7 @@
     "@prekladyher/engine-base": "*"
   },
   "scripts": {
-    "build": "rm -rf dist/ && tsc"
+    "build": "rimraf dist && tsc"
   },
   "repository": {
     "type": "git",
