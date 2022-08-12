@@ -1,3 +1,4 @@
+import { vi } from 'vitest';
 import { BufferSource } from '../source';
 import { createResolver } from './createResolver';
 import { defineNative } from './defineNative';
@@ -29,7 +30,7 @@ describe('struct', () => {
   });
 
   it('handle assert call', () => {
-    const assert = jest.fn().mockReturnValue(true);
+    const assert = vi.fn().mockReturnValue(true);
     const type = defineStruct([
       { name: 'foo', type: 'uint32', assert }
     ], resolve);
