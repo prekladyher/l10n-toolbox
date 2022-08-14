@@ -1,4 +1,4 @@
-import { TypeHandler } from '../types';
+import { TypeHandler } from '../types/index.js';
 
 const MAX_SAFE_INTEGER = BigInt(Number.MAX_SAFE_INTEGER);
 

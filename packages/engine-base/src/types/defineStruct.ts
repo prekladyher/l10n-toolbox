@@ -1,8 +1,6 @@
-import { string } from 'yargs';
-import { DataSource } from '../source';
-import { TypeHandler } from './TypeHandler';
-import { TypeFactory } from './TypeRegistry';
-import { TypeResolver, TypeKey } from './TypeResolver';
+import { TypeHandler } from './TypeHandler.js';
+import { TypeFactory } from './TypeRegistry.js';
+import { TypeResolver, TypeKey } from './TypeResolver.js';
 
 /**
  * Struct type schema.

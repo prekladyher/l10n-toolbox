@@ -1,5 +1,5 @@
-import { TypeHandler } from './TypeHandler';
-import { TypeResolver } from './TypeResolver';
+import { TypeHandler } from './TypeHandler.js';
+import { TypeResolver } from './TypeResolver.js';
 
 /**
  * Type definition registry.

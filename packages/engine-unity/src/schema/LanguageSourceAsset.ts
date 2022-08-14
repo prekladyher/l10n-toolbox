@@ -1,5 +1,5 @@
 import { registerStruct, TypeRegistry } from '@prekladyher/engine-base';
-import { EngineConfig } from '../EngineConfig';
+import { EngineConfig } from '../EngineConfig.js';
 
 const LanguageSourceAsset = registerStruct([
   { name: 'm_GameObject', type: 'Base' },

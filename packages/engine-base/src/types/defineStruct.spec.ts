@@ -1,8 +1,8 @@
 import { vi } from 'vitest';
-import { BufferSource } from '../source';
-import { createResolver } from './createResolver';
-import { defineNative } from './defineNative';
-import { defineStruct } from './defineStruct';
+import { BufferSource } from '../source/index.js';
+import { createResolver } from './createResolver.js';
+import { defineNative } from './defineNative.js';
+import { defineStruct } from './defineStruct.js';
 
 describe('struct', () => {
 

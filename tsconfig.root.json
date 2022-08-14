@@ -1,19 +1,14 @@
 {
-  "extends": "@tsconfig/node16/tsconfig.json",
-  "exclude": [
-    "**/*.spec.ts",
-    "**/*.stub.ts",
-    "node_modules",
-    "dist"
-  ],
   "compilerOptions": {
-    "declaration": true,
-    "declarationMap": true,
+    "forceConsistentCasingInFileNames": true,
+    "lib": ["ES2021"],
     "moduleResolution": "node",
     "paths": {
       "@prekladyher/*": [
         "./packages/*"
       ]
-    }
+    },
+    "strict": true,
+    "target": "ES2021",
   }
 }

@@ -1,4 +1,4 @@
-import DataSource from './DataSource';
+import DataSource from './DataSource.js';
 
 /**
  * Simple Buffer based data source.

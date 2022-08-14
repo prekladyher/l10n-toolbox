@@ -1,4 +1,4 @@
-import DataSource from './DataSource';
+import DataSource from './DataSource.js';
 
 /**
  * Windowed DataSource wrapper.

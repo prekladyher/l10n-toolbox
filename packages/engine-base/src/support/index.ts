@@ -1,5 +1,6 @@
-export * from './calcPadding';
-export * from './checkStrict';
-export * from './withFileSource';
-export * from './withFileSink';
-export * from './wrapBigInt';
+export * from './calcPadding.js';
+export * from './checkStrict.js';
+export * from './withFileSink.js';
+export * from './withFileSource.js';
+export * from './wrapBigInt.js';
+

@@ -1,8 +1,7 @@
-const fs = require('fs');
-const { program } = require('commander');
-
-const { createResolver, withFileSource, withFileSink } = require('@prekladyher/engine-base');
-const { registerTypes } = require('@prekladyher/engine-unity');
+import { createResolver, withFileSink, withFileSource } from '@prekladyher/engine-base';
+import { registerTypes } from '@prekladyher/engine-unreal';
+import { program } from 'commander';
+import fs from 'node:fs';
 
 const INSPECT_OPTS = {
   depth: null,
@@ -14,30 +13,30 @@ const INSPECT_OPTS = {
 };
 
 program
-  .name('unity')
-  .description('Handling Unity engine files');
+  .name('unreal')
+  .description('Handling Unreal Engine files');
 
 program
   .command('read')
-  .description('Extract Unity asset data into JSON-like model')
+  .description('Extract Unreal Engine asset data into JSON-like model')
   .requiredOption('-i, --input <path>', 'input data file')
-  .requiredOption('-t, --type <type>', 'asset data type (e.g. LanguageSourceAsset)')
+  .requiredOption('-t, --type <type>', 'asset data type (e.g. TextLocalizationResource)')
   .option('-c, --config <path>', 'JSON file with engine config options',
     value => JSON.parse(fs.readFileSync(value, { encoding: "utf8"})),
     {})
-  .option('-s, --select <path>', 'JSON path transform (e.g. $.mSource.mTerms[*].Term)')
+  .option('-s, --select <path>', 'JSON path transform (e.g. $.MagicNumber)')
   .option('-d, --depth <depth>', 'inspection path depth',
     value => parseInt(value, 10),
     Infinity)
   .option('-j, --json', 'return as valid raw JSON')
   .option('-o, --output <path>', 'write to file instead of stdout')
-  .action(({ input, type, config, select, depth, json, output }) => {
+  .action(async ({ input, type, config, select, depth, json, output }) => {
     const value = withFileSource(input, source => {
       const resolve = createResolver(registerTypes(config));
       return resolve(type).read(source);
     });
     const result = select ?
-      require('jsonpath-plus').JSONPath({ path: select, json: value }) : value;
+      (await import('jsonpath-plus')).JSONPath({ path: select, json: value }) : value;
     if (output) {
       fs.writeFileSync(output, JSON.stringify(result, null, '  '));
     } else if (json) {
@@ -48,9 +47,9 @@ program
   });
 
 program.command('write')
-  .description('Write Unity asset JSON as asset data file')
+  .description('Write Unreal Engine asset JSON as asset data file')
   .requiredOption('-i, --input <path>', 'input JSON file')
-  .requiredOption('-t, --type <type>', 'asset data type (e.g. LanguageSourceAsset)')
+  .requiredOption('-t, --type <type>', 'asset data type (e.g. TextLocalizationResource)')
   .requiredOption('-o, --output <path>', 'output asset file')
   .option('-c, --config <path>', 'JSON file with engine config options',
     value => JSON.parse(fs.readFileSync(value, { encoding: "utf8"})),

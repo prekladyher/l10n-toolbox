@@ -1,4 +1,4 @@
-import DataSink from './DataSink';
+import DataSink from './DataSink.js';
 
 /**
  * Buffer based data sink.

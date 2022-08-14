@@ -1,4 +1,4 @@
-import BufferSink from './BufferSink';
+import BufferSink from './BufferSink.js';
 
 describe('BufferSink', () => {
 

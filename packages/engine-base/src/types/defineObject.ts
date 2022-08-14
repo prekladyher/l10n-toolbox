@@ -1,7 +1,7 @@
-import { defineStruct, StructSchema } from './defineStruct';
-import { TypeHandler } from './TypeHandler';
-import { TypeFactory } from './TypeRegistry';
-import { TypeResolver } from './TypeResolver';
+import { defineStruct, StructSchema } from './defineStruct.js';
+import { TypeHandler } from './TypeHandler.js';
+import { TypeFactory } from './TypeRegistry.js';
+import { TypeResolver } from './TypeResolver.js';
 
 /**
  * Mapped object type schema.

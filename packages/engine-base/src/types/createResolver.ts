@@ -1,5 +1,5 @@
-import { TypeRegistry } from './TypeRegistry';
-import { TypeResolver } from './TypeResolver';
+import { TypeRegistry } from './TypeRegistry.js';
+import { TypeResolver } from './TypeResolver.js';
 
 /**
  * Common key for array type handler.

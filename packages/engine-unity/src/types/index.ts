@@ -1,2 +1,3 @@
-export * from './defineArray';
-export * from './defineString';
+export * from './defineArray.js';
+export * from './defineString.js';
+

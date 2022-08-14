@@ -1,4 +1,4 @@
-import { TypeHandler } from './TypeHandler';
+import { TypeHandler } from './TypeHandler.js';
 
 /**
  * Function responsible for calling Buffer's read method.

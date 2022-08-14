@@ -1,5 +1,5 @@
 import { defineNative, TypeHandler, TypeRegistry, wrapBigInt } from '@prekladyher/engine-base';
-import { defineArray, defineString } from '../types';
+import { defineArray, defineString } from '../types/index.js';
 
 export default function registerTypes(): TypeRegistry {
   return {

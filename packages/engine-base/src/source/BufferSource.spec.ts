@@ -9,10 +9,7 @@ describe('BufferSource', () => {
     source.skip(2);
     expect(source.cursor()).toBe(3);
     expect(source.read(1)[0]).toBe(4);
-    try {
-      source.read(1);
-      fail('EOF expected.');
-    } catch (e) { /* expected */}
+    expect(() => source.read(1)).toThrowError();
     source.close();
   });
 

@@ -1,4 +1,4 @@
-import { DataSource } from '../source';
+import { DataSource } from '../source/index.js';
 
 /**
  * Type deserializer function.

@@ -1,7 +1,7 @@
-export { default as DataSource } from './DataSource';
-export { default as DataSink } from './DataSource';
-export { default as BufferSource } from './BufferSource';
-export { default as BufferSink } from './BufferSink';
-export { default as FileSource } from './FileSource';
-export { default as FileSink } from './FileSink';
-export { default as WindowSource } from './WindowSource';
+export { default as BufferSink } from './BufferSink.js';
+export { default as BufferSource } from './BufferSource.js';
+export { default as DataSink, default as DataSource } from './DataSource.js';
+export { default as FileSink } from './FileSink.js';
+export { default as FileSource } from './FileSource.js';
+export { default as WindowSource } from './WindowSource.js';
+

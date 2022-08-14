@@ -1,4 +1,4 @@
-import { calcPadding } from './calcPadding';
+import { calcPadding } from './calcPadding.js';
 
 describe('calcPadding', () => {
 

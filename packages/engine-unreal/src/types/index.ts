@@ -1,3 +1,4 @@
-export * from './defineArray';
-export * from './defineString';
-export * from './defineGuid';
+export * from './defineArray.js';
+export * from './defineGuid.js';
+export * from './defineString.js';
+

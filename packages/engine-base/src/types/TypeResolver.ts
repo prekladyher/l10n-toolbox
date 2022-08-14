@@ -1,4 +1,4 @@
-import { TypeHandler } from './TypeHandler';
+import { TypeHandler } from './TypeHandler.js';
 
 /**
  * Type lookup key (type name with additional parameters).

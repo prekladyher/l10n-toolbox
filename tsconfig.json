@@ -1,0 +1,12 @@
+{
+  "extends": "./tsconfig.root.json",
+  "compilerOptions": {
+    "types": [
+      "node",
+      "vitest/globals"
+    ]
+  },
+  "exclude": [
+    "./packages/*/dist"
+  ]
+}

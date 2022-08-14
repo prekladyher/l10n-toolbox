@@ -1,3 +1,4 @@
-export * from './source';
-export * from './types';
-export * from './support';
+export * from './source/index.js';
+export * from './support/index.js';
+export * from './types/index.js';
+

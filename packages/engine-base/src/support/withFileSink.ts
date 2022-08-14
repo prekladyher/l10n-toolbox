@@ -1,4 +1,4 @@
-import { FileSink } from '../source';
+import { FileSink } from '../source/index.js';
 
 /**
  * Execute task with data sink for the specified filename.

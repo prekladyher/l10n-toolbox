@@ -1,6 +1,5 @@
-import * as fs from 'fs';
-
-import DataSource from './DataSource';
+import * as fs from 'node:fs';
+import DataSource from './DataSource.js';
 
 /**
  * Node.js based file data source using single internal read buffer.

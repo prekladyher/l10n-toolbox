@@ -1,5 +1,5 @@
-import { defineObject, defineStruct, TypeFactory, TypeRegistry } from '@prekladyher/engine-base';
-import { defineArray, defineString } from '../types';
+import { defineStruct, TypeFactory, TypeRegistry } from '@prekladyher/engine-base';
+import { defineArray, defineString } from '../types/index.js';
 
 type PersistedType = {
   Header: {

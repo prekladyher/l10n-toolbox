@@ -1,7 +1,7 @@
-import { BufferSource } from '../source';
-import { createResolver } from './createResolver';
-import { defineNative } from './defineNative';
-import { defineObject } from './defineObject';
+import { BufferSource } from '../source/index.js';
+import { createResolver } from './createResolver.js';
+import { defineNative } from './defineNative.js';
+import { defineObject } from './defineObject.js';
 
 describe('struct', () => {
 

@@ -1,5 +1,5 @@
-import { BufferSource } from '../source';
-import { defineNative } from './defineNative';
+import { BufferSource } from '../source/index.js';
+import { defineNative } from './defineNative.js';
 
 describe('native', () => {
 

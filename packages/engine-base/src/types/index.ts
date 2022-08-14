@@ -1,7 +1,8 @@
-export * from './TypeHandler';
-export * from './TypeResolver';
-export * from './TypeRegistry';
-export * from './defineNative';
-export * from './defineStruct';
-export * from './defineObject';
-export * from './createResolver';
+export * from './createResolver.js';
+export * from './defineNative.js';
+export * from './defineObject.js';
+export * from './defineStruct.js';
+export * from './TypeHandler.js';
+export * from './TypeRegistry.js';
+export * from './TypeResolver.js';
+

@@ -1,4 +1,4 @@
-import { TypeKey, TypeResolver, TypeHandler, calcPadding } from '@prekladyher/engine-base';
+import { calcPadding, TypeHandler, TypeKey, TypeResolver } from '@prekladyher/engine-base';
 
 /**
  * Create special case array handler for compacted UInt8 arrays.

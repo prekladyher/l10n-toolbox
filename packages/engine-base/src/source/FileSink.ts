@@ -1,6 +1,5 @@
-import * as fs from 'fs';
-
-import DataSink from './DataSink';
+import * as fs from 'node:fs';
+import DataSink from './DataSink.js';
 
 export default class FileSink implements DataSink {
 

@@ -1,4 +1,4 @@
-import { FileSource } from '../source';
+import { FileSource } from '../source/index.js';
 
 /**
  * Execute task with data source for the specified filename.
