@@ -24,9 +24,9 @@ module.exports = {
   },
   overrides: [
     {
-      files: "*.js",
+      files: "*.mjs",
       rules: {
-        "@typescript-eslint/no-var-requires": "off"
+        "semi": "always"
       }
     }
   ]
