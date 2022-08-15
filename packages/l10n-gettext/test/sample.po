@@ -1,0 +1,9 @@
+# This is
+# a multiline comment
+#, fuzzy
+msgctxt "simple attribute"
+msgid ""
+"multiline\n"
+"attribute"
+msgstr ""
+"\"quoted attribute\""

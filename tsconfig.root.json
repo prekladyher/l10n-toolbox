@@ -2,7 +2,9 @@
   "compilerOptions": {
     "forceConsistentCasingInFileNames": true,
     "lib": ["ES2021"],
-    "moduleResolution": "node",
+    "module": "Node16",
+    "moduleResolution": "Node16",
+    "skipLibCheck": true,
     "paths": {
       "@prekladyher/*": [
         "./packages/*"

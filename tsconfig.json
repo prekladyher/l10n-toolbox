@@ -6,7 +6,10 @@
       "vitest/globals"
     ]
   },
+  "include": [
+    "packages/**/*.ts"
+  ],
   "exclude": [
-    "./packages/*/dist"
+    "packages/*/dist"
   ]
 }

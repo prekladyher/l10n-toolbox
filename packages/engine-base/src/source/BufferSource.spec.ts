@@ -1,4 +1,4 @@
-import BufferSource from './BufferSource';
+import BufferSource from './BufferSource.js';
 
 describe('BufferSource', () => {
 
