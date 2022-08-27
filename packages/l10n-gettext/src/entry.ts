@@ -3,7 +3,7 @@ import { CommentKey, MessageAttrs, PoMessage } from './types.js';
 /**
  * PO comment field orer.
  */
-let COMMENT_ORDER: CommentKey[] = ['#', '#.', '#:', '#,', '#|'];
+const COMMENT_ORDER: CommentKey[] = ['#', '#.', '#:', '#,', '#|'];
 
 /**
  * PO attribute order (without plural forms).
@@ -45,7 +45,7 @@ export function encodeAttribute(name: string, value: string) {
   if (name === 'msgstr' || encoded.length > 1) {
     return `${name} ""\n"${encoded.join('"\n"')}"`;
   }
-  return `${name} "${encoded[0]}"`
+  return `${name} "${encoded[0]}"`;
 }
 
 /**
@@ -69,11 +69,8 @@ export function decodeEntries(content: string) {
  * Decode single encoded PO file entry.
  */
 export function decodeEntry(encoded: string): PoMessage {
-  const entry: PoMessage = {
-    msgid: ''
-  };
   const fields: [keyof PoMessage, string][] = [];
-  for (let line of encoded.split(/\r?\n/)) {
+  for (const line of encoded.split(/\r?\n/)) {
     if (fields.length && line[0] === "\"") {
       fields[fields.length - 1][1] += decodeValue(line);  // Attribute value line continuation
       continue;

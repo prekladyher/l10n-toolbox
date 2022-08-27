@@ -18,7 +18,9 @@
     "jsonpath-plus": "^6.0.1"
   },
   "scripts": {
-    "test": "vitest"
+    "build": "npm run -ws --if-present build",
+    "test": "npm run -ws --if-present test",
+    "lint": "eslint packages/*/src/**/*.ts scripts/*.mjs"
   },
   "workspaces": [
     "packages/engine-base",

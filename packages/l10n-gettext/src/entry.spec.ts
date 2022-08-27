@@ -11,7 +11,7 @@ describe('PO file library', async () => {
     'msgstr': '"quoted attribute"'
   };
 
-  const TEST_FILE = (await readFile(new URL('test/sample.po', import.meta.url), 'utf-8')).trim();
+  const TEST_FILE = (await readFile(new URL('../test/sample.po', import.meta.url), 'utf-8')).trim();
 
   it('encodes sample entry', function() {
     expect(encodeEntry(TEST_ENTRY)).toBe(TEST_FILE);

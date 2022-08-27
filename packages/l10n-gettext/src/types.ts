@@ -29,7 +29,7 @@ export interface MessageAttrs {
 
   msgstr?: string;
 
-};
+}
 
 /**
  * Single PO message entry.

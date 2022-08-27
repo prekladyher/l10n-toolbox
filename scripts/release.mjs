@@ -4,94 +4,115 @@ import { program } from 'commander';
 import glob from 'fast-glob';
 import { spawn } from 'node:child_process';
 import { readFile, writeFile } from 'node:fs/promises';
-import path from 'path';
+import { join } from 'path';
 import semver from 'semver';
 
 program
-  .option('--no-sign', 'do not sign git commit and tags')
   .option('--dry-run', 'do not make any changes')
-  .option('-f, --force', 'do not validate version change')
+  .option('--no-validate', 'do not validate version change')
+  .option('--no-push', 'do not push git changes')
   .option('--no-publish', 'do not publish to npm registry')
   .argument('[<version> | major | minor | patch ]')
   .argument('<package-path>');
 
 program.parse();
 
+const DRY_RUN = program.opts().dryRun;
+
 function report(message) {
-  console.log(`${chalk.red('[RELEASE]')} ${message}`);
+  console.log(`${chalk.bold.cyan('[RELEASE]')} ${message}`);
+}
+
+async function exec(command, ...args) {
+  if (DRY_RUN) {
+    console.log(`${chalk.yellow('[EXEC]')} ${command} ${args.join(' ')}`);
+  } else {
+    return await new Promise((resolve, reject) => {
+      const child = spawn(command, args, { stdio: 'inherit' });
+      child.on('exit', code => code === 0 ? resolve() : reject(code));
+    });
+  }
+}
+
+async function loadJson(file) {
+  return JSON.parse((await readFile(file)).toString('utf-8'));
+}
+
+async function saveJson(file, content) {
+  await writeFile(file, JSON.stringify(content, null, '  ') + '\n');
+}
+
+function updateDependencies(manifest, name, version) {
+  if (manifest?.dependencies?.[name]) {
+    manifest.dependencies[name] = version;
+  }
+  if (manifest?.peerDependencies?.[name]) {
+    manifest.peerDependencies[name] = version;
+  }
 }
 
 async function main() {
-  const { force, sign, publish, dryRun } = program.opts();
+  const { validate, push, publish } = program.opts();
 
-  const safeExec = async (command, ...args) => {
-    if (dryRun) {
-      console.log(`${chalk.yellow('[EXEC]')} ${command} ${args.join(' ')}`);
-    } else {
-      await new Promise((resolve, reject) => {
-        const child = spawn(command, args, { stdio: 'inherit' });
-        child.on('exit', code => code === 0 ? resolve() : reject(code));
-      });
-    }
-  };
+  const workspace = program.args[1];
+  const workspaceParams = ['-w', workspace];
 
-  const manifestPath = path.join(program.args[1], 'package.json');
-  const manifest = JSON.parse((await readFile(manifestPath)).toString());
+  const releaseManifest = await loadJson(join(workspace, 'package.json'));
 
+  const sourceVersion = releaseManifest.version;
   const targetVersion = semver.valid(program.args[0])
     ? program.args[0]
-    : semver.inc(manifest.version, program.args[0]);
+    : semver.inc(sourceVersion, program.args[0]);
 
-  if (!force && semver.gte(manifest.version, targetVersion)) {
-    console.error(`Invalid version change from ${manifest.version} to ${targetVersion}`);
+  if (validate && semver.gte(sourceVersion, targetVersion)) {
+    console.error(`Invalid version change from ${sourceVersion} to ${targetVersion}`);
     process.exit(1);
   }
 
-  const releaseName = `${manifest.name.replace(/^@[^/]+\//, '')}-${targetVersion}`;
+  const releaseName = `${releaseManifest.name.replace(/^@[^/]+\//, '')}-${targetVersion}`;
   report(`Starting release ${chalk.green(releaseName)}`);
 
   try {
-    await safeExec('git', 'diff', '--quiet');
+    await exec('git', 'diff', '--quiet', 'HEAD');
   } catch (error) {
     console.error(`Working tree probably dirty`);
     process.exit(1);
   }
 
   report('Running tests');
-  await safeExec('npm', 'run', 'test', 'run');
+  await exec('npm', 'run', ...workspaceParams, '--if-present', 'test');
 
-  report(`Updating package version from ${chalk.red(manifest.version)} to ${chalk.green(targetVersion)}`);
-  manifest.version = targetVersion;
-  dryRun || await writeFile(manifestPath, JSON.stringify(manifest, null, '  ') + '\n');
+  report(`Updating package version from ${chalk.red(sourceVersion)} to ${chalk.green(targetVersion)}`);
+  releaseManifest.version = targetVersion;
+  await saveJson(join(workspace, 'package.json'), releaseManifest);
 
-  report(`Updating package references to ${chalk.green(manifest.name)}`)
+  report(`Updating package references to ${chalk.green(releaseManifest.name)}`);
   for (const file of await glob('packages/*/package.json')) {
-    dryRun || await updateVersions(file, manifest.name, targetVersion);
+    const manifest = await loadJson(file);
+    updateDependencies(manifest, releaseManifest.name, targetVersion);
+    saveJson(file, manifest);
   }
 
   report('Updating package-lock.json file');
-  await safeExec('npm', 'install');
+  await exec('npm', 'install');
 
   report(`Creating git commit and tag ${chalk.green(releaseName)}`);
-  await safeExec('git', 'add', '.');
-  await safeExec('git', 'commit', '-m', `Release ${releaseName}`);
-  await safeExec('git', 'tag', ...(sign ? ['-s'] : []), '-m', `Release ${releaseName}`, `${releaseName}`);
+  await exec('git', 'add', '.');
+  await exec('git', 'commit', '-m', `Release ${releaseName}`);
+  await exec('git', 'tag', '-m', `Release ${releaseName}`, releaseName);
+
+  report('Running clean build before publishing');
+  await exec('npm', 'run', ...workspaceParams, 'build');
+
+  if (push) {
+    report(`Pushing git commit and tag`);
+    await exec('git', 'push', '--atomic', 'origin', 'HEAD', releaseName);
+  }
 
   if (publish) {
     report(`Publishing to npm registry`);
-    await safeExec('npm', 'publish', '-w', program.args[1]);
+    await exec('npm', 'publish', '-w', program.args[1]);
   }
-}
-
-async function updateVersions(file, dependency, version) {
-  const manifest = JSON.parse((await readFile(file)).toString());
-  if (manifest.dependencies?.[dependency]) {
-    manifest.dependencies[dependency] = version;
-  }
-  if (manifest.peerDependencies?.[dependency]) {
-    manifest.peerDependencies[dependency] = version;
-  }
-  await writeFile(file, JSON.stringify(manifest, null, '  ') + '\n');
 }
 
 main();

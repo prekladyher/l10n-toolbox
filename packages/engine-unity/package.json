@@ -12,7 +12,8 @@
     "@prekladyher/engine-base": "1.2.1"
   },
   "scripts": {
-    "build": "rimraf dist && tsc -p tsconfig.build.json"
+    "build": "rimraf dist && tsc -p tsconfig.build.json",
+    "test": "vitest run"
   },
   "repository": {
     "type": "git",

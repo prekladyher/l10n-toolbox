@@ -26,7 +26,7 @@ module.exports = {
     {
       files: "*.mjs",
       rules: {
-        "semi": "always"
+        "semi": ["error", "always"]
       }
     }
   ]
