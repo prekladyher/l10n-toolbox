@@ -19,6 +19,8 @@ program.parse();
 
 const DRY_RUN = program.opts().dryRun;
 
+const NPM_CMD = /^win/.test(process.platform) ? 'npm.cmd' : 'npm';
+
 function report(message) {
   console.log(`${chalk.bold.cyan('[RELEASE]')} ${message}`);
 }
@@ -80,7 +82,7 @@ async function main() {
   }
 
   report('Running tests');
-  await exec('npm', 'run', ...workspaceParams, '--if-present', 'test');
+  await exec(NPM_CMD, 'run', ...workspaceParams, '--if-present', 'test');
 
   report(`Updating package version from ${chalk.red(sourceVersion)} to ${chalk.green(targetVersion)}`);
   releaseManifest.version = targetVersion;
@@ -94,7 +96,7 @@ async function main() {
   }
 
   report('Updating package-lock.json file');
-  await exec('npm', 'install');
+  await exec(NPM_CMD, 'install');
 
   report(`Creating git commit and tag ${chalk.green(releaseName)}`);
   await exec('git', 'add', '.');
@@ -102,7 +104,7 @@ async function main() {
   await exec('git', 'tag', '-m', `Release ${releaseName}`, releaseName);
 
   report('Running clean build before publishing');
-  await exec('npm', 'run', ...workspaceParams, 'build');
+  await exec(NPM_CMD, 'run', ...workspaceParams, 'build');
 
   if (push) {
     report(`Pushing git commit and tag`);
@@ -111,7 +113,7 @@ async function main() {
 
   if (publish) {
     report(`Publishing to npm registry`);
-    await exec('npm', 'publish', '-w', program.args[1]);
+    await exec(NPM_CMD, 'publish', '-w', program.args[1]);
   }
 }
 
