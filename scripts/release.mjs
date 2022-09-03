@@ -31,7 +31,7 @@ async function exec(command, ...args) {
   } else {
     return await new Promise((resolve, reject) => {
       const child = spawn(command, args, { stdio: 'inherit' });
-      child.on('exit', code => code === 0 ? resolve() : reject(code));
+      child.on('exit', code => code === 0 ? resolve(null) : reject(code));
     });
   }
 }

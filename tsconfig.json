@@ -4,12 +4,18 @@
     "types": [
       "node",
       "vitest/globals"
-    ]
+    ],
+    "noEmit": true
   },
   "include": [
     "packages/**/*.ts"
   ],
   "exclude": [
     "packages/*/dist"
+  ],
+  "references": [
+    {
+      "path": "tsconfig.script.json"
+    }
   ]
 }

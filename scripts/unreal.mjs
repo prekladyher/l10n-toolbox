@@ -1,7 +1,7 @@
 import { createResolver, withFileSink, withFileSource } from '@prekladyher/engine-base';
 import { registerTypes } from '@prekladyher/engine-unreal';
 import { program } from 'commander';
-import fs from 'node:fs';
+import { readFileSync, writeFileSync } from 'node:fs';
 
 const INSPECT_OPTS = {
   depth: null,
@@ -22,7 +22,7 @@ program
   .requiredOption('-i, --input <path>', 'input data file')
   .requiredOption('-t, --type <type>', 'asset data type (e.g. TextLocalizationResource)')
   .option('-c, --config <path>', 'JSON file with engine config options',
-    value => JSON.parse(fs.readFileSync(value, { encoding: "utf8"})),
+    value => JSON.parse(readFileSync(value, { encoding: "utf8"})),
     {})
   .option('-s, --select <path>', 'JSON path transform (e.g. $.MagicNumber)')
   .option('-d, --depth <depth>', 'inspection path depth',
@@ -38,7 +38,7 @@ program
     const result = select ?
       (await import('jsonpath-plus')).JSONPath({ path: select, json: value }) : value;
     if (output) {
-      fs.writeFileSync(output, JSON.stringify(result, null, '  '));
+      writeFileSync(output, JSON.stringify(result, null, '  '));
     } else if (json) {
       console.log(JSON.stringify(result, null, '  '));
     } else {
@@ -52,10 +52,10 @@ program.command('write')
   .requiredOption('-t, --type <type>', 'asset data type (e.g. TextLocalizationResource)')
   .requiredOption('-o, --output <path>', 'output asset file')
   .option('-c, --config <path>', 'JSON file with engine config options',
-    value => JSON.parse(fs.readFileSync(value, { encoding: "utf8"})),
+    value => JSON.parse(readFileSync(value, { encoding: "utf8"})),
     {})
   .action(({ input, output, type, config }) => {
-    const value = JSON.parse(fs.readFileSync(input, { encoding: "utf8" }));
+    const value = JSON.parse(readFileSync(input, { encoding: "utf8" }));
     withFileSink(output, sink => {
       const resolve = createResolver(registerTypes(config));
       resolve(type).write(value).forEach(buffer => sink.write(buffer));

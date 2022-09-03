@@ -1,0 +1,11 @@
+{
+  "extends": "./tsconfig.root.json",
+  "compilerOptions": {
+    "checkJs": true,
+    "noImplicitAny": false,
+    "composite": true
+  },
+  "include": [
+    "scripts/*.mjs"
+  ]
+}

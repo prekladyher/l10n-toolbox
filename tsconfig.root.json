@@ -1,5 +1,6 @@
 {
   "compilerOptions": {
+    "allowJs": true,
     "forceConsistentCasingInFileNames": true,
     "lib": ["ES2021"],
     "module": "Node16",
