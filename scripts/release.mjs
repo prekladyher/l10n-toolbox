@@ -1,28 +1,25 @@
-// inspired by https://github.com/vuejs/core/blob/main/scripts/release.js
 import chalk from 'chalk';
 import { program } from 'commander';
-import glob from 'fast-glob';
+import glob from 'glob';
 import { spawn } from 'node:child_process';
 import { readFile, writeFile } from 'node:fs/promises';
-import { join } from 'path';
+import { promisify } from 'node:util';
 import semver from 'semver';
 
 program
-  .option('--dry-run', 'do not make any changes')
+  .description('Prepare and perform project release.')
+  .option('--dry-run', 'do not commit or push any changes')
   .option('--no-validate', 'do not validate version change')
-  .option('--no-push', 'do not push git changes')
+  .option('--no-test', 'do not run test')
   .option('--no-publish', 'do not publish to npm registry')
-  .argument('[<version> | major | minor | patch ]')
-  .argument('<package-path>');
+  .argument('version', 'version specifier ( <version> | major | minor | patch> )');
 
 program.parse();
 
 const DRY_RUN = program.opts().dryRun;
 
-const NPM_CMD = /^win/.test(process.platform) ? 'npm.cmd' : 'npm';
-
 function report(message) {
-  console.log(`${chalk.bold.cyan('[RELEASE]')} ${message}`);
+  console.log(`${chalk.bold.magenta('[RELEASE]')} ${message}`);
 }
 
 async function exec(command, ...args) {
@@ -44,34 +41,32 @@ async function saveJson(file, content) {
   await writeFile(file, JSON.stringify(content, null, '  ') + '\n');
 }
 
-function updateDependencies(manifest, name, version) {
-  if (manifest?.dependencies?.[name]) {
-    manifest.dependencies[name] = version;
-  }
-  if (manifest?.peerDependencies?.[name]) {
-    manifest.peerDependencies[name] = version;
-  }
+function updateVersions(dependencies, version) {
+  Object.keys(dependencies || {})
+    .filter(name => name.startsWith('@prekladyher/l10n-toolbox'))
+    .forEach(name => dependencies[name] = version);
 }
 
 async function main() {
-  const { validate, push, publish } = program.opts();
+  const { validate, test, publish } = program.opts();
 
-  const workspace = program.args[1];
-  const workspaceParams = ['-w', workspace];
+  const rootManifest = await loadJson('package.json');
+  if (rootManifest.name !== '@prekladyher/l10n-toolbox-monorepo') {
+    console.error('This script must be executed from project root');
+    process.exit(1);
+  }
 
-  const releaseManifest = await loadJson(join(workspace, 'package.json'));
-
-  const sourceVersion = releaseManifest.version;
-  const targetVersion = semver.valid(program.args[0])
+  const sourceVersion = rootManifest.version;
+  const /** @type any */ targetVersion = semver.valid(program.args[0])
     ? program.args[0]
-    : semver.inc(sourceVersion, program.args[0]);
+    : semver.inc(sourceVersion, /** @type any */ (program.args[0]));
 
   if (validate && semver.gte(sourceVersion, targetVersion)) {
     console.error(`Invalid version change from ${sourceVersion} to ${targetVersion}`);
     process.exit(1);
   }
 
-  const releaseName = `${releaseManifest.name.replace(/^@[^/]+\//, '')}-${targetVersion}`;
+  const releaseName = `${targetVersion}`;
   report(`Starting release ${chalk.green(releaseName)}`);
 
   try {
@@ -81,40 +76,57 @@ async function main() {
     process.exit(1);
   }
 
-  report('Running tests');
-  await exec(NPM_CMD, 'run', ...workspaceParams, '--if-present', 'test');
+  if (test) {
+    report('Running tests');
+    await exec('npm', 'run', 'test');
+  }
 
   report(`Updating package version from ${chalk.red(sourceVersion)} to ${chalk.green(targetVersion)}`);
-  releaseManifest.version = targetVersion;
-  await saveJson(join(workspace, 'package.json'), releaseManifest);
+  rootManifest.version = targetVersion;
+  await saveJson('package.json', rootManifest);
 
-  report(`Updating package references to ${chalk.green(releaseManifest.name)}`);
-  for (const file of await glob('packages/*/package.json')) {
+  report(`Updating cross package references`);
+  for (const file of await promisify(glob)('packages/*/package.json')) {
     const manifest = await loadJson(file);
-    updateDependencies(manifest, releaseManifest.name, targetVersion);
-    saveJson(file, manifest);
+    manifest.version = targetVersion;
+    updateVersions(manifest.dependencies, targetVersion);
+    updateVersions(manifest.devDependencies, targetVersion);
+    updateVersions(manifest.peerDependencies, targetVersion);
+    updateVersions(manifest.optionalDependencies, targetVersion);
+    await saveJson(file, manifest);
   }
 
   report('Updating package-lock.json file');
-  await exec(NPM_CMD, 'install');
+  await exec('npm', 'install');
 
   report(`Creating git commit and tag ${chalk.green(releaseName)}`);
-  await exec('git', 'add', '.');
+  await exec(
+    'git',
+    'add',
+    'package.json',
+    'package-lock.json',
+    'packages/*/package.json'
+  );
   await exec('git', 'commit', '-m', `Release ${releaseName}`);
   await exec('git', 'tag', '-m', `Release ${releaseName}`, releaseName);
 
   report('Running clean build before publishing');
-  await exec(NPM_CMD, 'run', ...workspaceParams, 'build');
+  await exec('npm', 'run', 'build');
 
-  if (push) {
+  if (publish) {
     report(`Pushing git commit and tag`);
     await exec('git', 'push', '--atomic', 'origin', 'HEAD', releaseName);
   }
 
   if (publish) {
     report(`Publishing to npm registry`);
-    await exec(NPM_CMD, 'publish', '-w', program.args[1]);
+    await exec('npm', 'publish', '-ws');
   }
 }
 
-main();
+try {
+  await main();
+} catch (error) {
+  console.log(`Error during release execution: ${error?.toString()}`);
+  process.exit(1);
+}

@@ -1,5 +1,7 @@
 {
-  "name": "@prekladyher/l10n-toolbox",
+  "name": "@prekladyher/l10n-toolbox-monorepo",
+  "version": "1.4.0",
+  "type": "module",
   "private": true,
   "devDependencies": {
     "@types/jsonpath-plus": "^5.0.2",
@@ -16,8 +18,7 @@
     "vitest": "^0.21.1"
   },
   "dependencies": {
-    "commander": "^9.2.0",
-    "jsonpath-plus": "^6.0.1"
+    "commander": "^9.2.0"
   },
   "scripts": {
     "build": "npm run -ws --if-present build",
@@ -25,8 +26,8 @@
     "lint": "eslint packages/*/src/**/*.ts scripts/*.mjs"
   },
   "workspaces": [
-    "packages/engine-base",
-    "packages/engine-*",
-    "packages/*"
+    "packages/engine",
+    "packages/gettext",
+    "packages/toolbox"
   ]
 }

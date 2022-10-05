@@ -12,10 +12,5 @@
   ],
   "exclude": [
     "packages/*/dist"
-  ],
-  "references": [
-    {
-      "path": "tsconfig.script.json"
-    }
   ]
 }

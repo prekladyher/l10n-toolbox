@@ -1,0 +1,33 @@
+{
+  "name": "@prekladyher/l10n-toolbox-engine",
+  "version": "1.4.0",
+  "description": "Game engine file manipulation tools.",
+  "type": "module",
+  "exports": {
+    "./base": {
+      "import": "./dist/base/index.js",
+      "types": "./dist/base/index.d.ts"
+    },
+    "./unity": {
+      "import": "./dist/unity/index.js",
+      "types": "./dist/unity/index.d.ts"
+    },
+    "./unreal": {
+      "import": "./dist/unreal/index.js",
+      "types": "./dist/unreal/index.d.ts"
+    }
+  } ,
+  "files": [
+    "dist/*"
+  ],
+  "scripts": {
+    "build": "rimraf dist && tsc -p tsconfig.build.json",
+    "test": "vitest run"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/prekladyher/l10n-toolbox.git"
+  },
+  "keywords": [],
+  "license": "ISC"
+}
