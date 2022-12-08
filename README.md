@@ -2,19 +2,13 @@
 
 Toolbox with scripts to manipulate various game data files to help with fan based localization.
 
-## Running CLI Tools
 
-You must install dependencies and compile TypeScript sources before running any CLI tools:
+# Using Command Line Tools
 
-```bash
-npm install && npm run -ws build
-```
-
-After this step you can run NodeJS scripts in `packages/cli-*` packages. Simply call `help` command
-on any CLI package to discover its capabilities:
+Discover available commands with the following:
 
 ```bash
-npx ./packages/cli-unity help
+npx @prekladyher/l10n-toolbox --help
 ```
 
 ### Example Invocations
@@ -22,11 +16,20 @@ npx ./packages/cli-unity help
 Extract language data from Disco Elysium's asset:
 
 ```bash
-npx ./packages/cli-unity read -j -t LanguageSourceAsset -i GeneralLockitEnglish.dat > General.json
+npx @prekladyher/l10n-toolbox unity read -j -t LanguageSourceAsset -i GeneralLockitEnglish.dat > General.json
 ```
 
 Generate back asset from the JSON file:
 
 ```
-npx ./packages/cli-unity write -j -t LanguageSourceAsset -i General.json -o GeneralLockitCustom.dat
+npx @prekladyher/l10n-toolbox unity write -j -t LanguageSourceAsset -i General.json -o GeneralLockitCustom.dat
+```
+
+## Invoking Commands During Development
+
+You can test commands durng development with the following:
+
+```bash
+npm install && npm run -ws build
+npx ./packages/toolbox --help
 ```
