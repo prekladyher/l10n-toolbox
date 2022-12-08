@@ -1,6 +1,6 @@
 {
   "name": "@prekladyher/l10n-toolbox",
-  "version": "1.4.0",
+  "version": "2.0.0",
   "description": "L10n Toolbox CLI.",
   "type": "module",
   "exports": "./dist/index.js",
@@ -11,8 +11,8 @@
     "dist/*"
   ],
   "dependencies": {
-    "@prekladyher/l10n-toolbox-engine": "^1.4.0",
-    "@prekladyher/l10n-toolbox-gettext": "^1.4.0",
+    "@prekladyher/l10n-toolbox-engine": "2.0.0",
+    "@prekladyher/l10n-toolbox-gettext": "2.0.0",
     "commander": "^9.4.1"
   },
   "scripts": {

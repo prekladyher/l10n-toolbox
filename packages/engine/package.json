@@ -1,6 +1,6 @@
 {
   "name": "@prekladyher/l10n-toolbox-engine",
-  "version": "1.4.0",
+  "version": "2.0.0",
   "description": "Game engine file manipulation tools.",
   "type": "module",
   "exports": {
@@ -16,7 +16,7 @@
       "import": "./dist/unreal/index.js",
       "types": "./dist/unreal/index.d.ts"
     }
-  } ,
+  },
   "files": [
     "dist/*"
   ],
