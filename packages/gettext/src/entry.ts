@@ -14,7 +14,7 @@ const ATTRIBUTE_ORDER: (keyof MessageAttrs)[] = ['msgctxt', 'msgid', 'msgstr'];
   * Encode PO file entries.
   */
 export function encodeEntries(entries: PoMessage[]) {
-  return entries.map(entry => encodeEntry(entry)).join('\n\n');
+  return entries.map(entry => encodeEntry(entry)).join('\n');
 }
 
 /**
@@ -31,7 +31,7 @@ export function encodeEntry(entry: PoMessage) {
       result.push(encodeAttribute(type, value));
     }
   }
-  return result.join('\n');
+  return result.join('\n') + '\n';
 }
 
 /**
@@ -70,7 +70,7 @@ export function decodeEntries(content: string) {
  */
 export function decodeEntry(encoded: string): PoMessage {
   const fields: [keyof PoMessage, string][] = [];
-  for (const line of encoded.split(/\r?\n/)) {
+  for (const line of encoded.trim().split(/\r?\n/)) {
     if (fields.length && line[0] === "\"") {
       fields[fields.length - 1][1] += decodeValue(line);  // Attribute value line continuation
       continue;

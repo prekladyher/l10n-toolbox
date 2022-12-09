@@ -11,7 +11,7 @@ describe('PO file library', async () => {
     'msgstr': '"quoted attribute"'
   };
 
-  const TEST_FILE = (await readFile(new URL('../test/sample.po', import.meta.url), 'utf-8')).trim();
+  const TEST_FILE = (await readFile(new URL('../test/sample.po', import.meta.url), 'utf-8'));
 
   it('encodes sample entry', function() {
     expect(encodeEntry(TEST_ENTRY)).toBe(TEST_FILE);
@@ -23,8 +23,8 @@ describe('PO file library', async () => {
 
   it('encodes as Lokalize', function() {
     expect(encodeEntries([{ msgid: '', msgstr: 'foo\n' }]))
-      .toBe(`msgid ""\nmsgstr ""\n"foo\\n"`);
+      .toBe(`msgid ""\nmsgstr ""\n"foo\\n"\n`);
     expect(encodeEntries([{ msgid: '', msgstr: 'foo\nbar\n' }]))
-      .toBe(`msgid ""\nmsgstr ""\n"foo\\n"\n"bar\\n"`);
+      .toBe(`msgid ""\nmsgstr ""\n"foo\\n"\n"bar\\n"\n`);
   });
 });
