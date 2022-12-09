@@ -5,7 +5,15 @@
       "node",
       "vitest/globals"
     ],
-    "noEmit": true
+    "noEmit": true,
+    "paths": {
+      "@prekladyher/l10n-toolbox-engine/*": [
+        "./packages/engine/src/*/index.ts"
+      ],
+      "@prekladyher/l10n-toolbox-gettext": [
+        "./packages/gettext/src/index.ts"
+      ]
+    }
   },
   "include": [
     "packages/**/*.ts"

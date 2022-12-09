@@ -6,14 +6,6 @@
     "module": "Node16",
     "moduleResolution": "Node16",
     "skipLibCheck": true,
-    "paths": {
-      "@prekladyher/l10n-toolbox-engine/*": [
-        "./packages/engine/src/*/index.ts"
-      ],
-      "@prekladyher/l10n-toolbox-gettext": [
-        "./packages/gettext/src/index.ts"
-      ]
-    },
     "strict": true,
     "target": "ES2021",
   }
