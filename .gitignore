@@ -9,3 +9,8 @@ work/
 
 # Dotenv environment variable files
 .env
+
+# Vagrant files
+.vagrant
+Vagrantfile
+
