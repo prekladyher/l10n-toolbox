@@ -16,7 +16,15 @@ export const CommentType = {
 
 } as const;
 
+/**
+ * Allowed comment keys.
+ */
 export type CommentKey = typeof CommentType[keyof typeof CommentType];
+
+/**
+ * Comment attributes.
+ */
+export type CommentAttrs = Partial<Record<CommentKey, string>>;
 
 /**
  * Message attributes.
@@ -34,5 +42,4 @@ export interface MessageAttrs {
 /**
  * Single PO message entry.
  */
-export interface PoMessage extends Partial<Record<CommentKey, string>>, MessageAttrs {
-}
+export type PoMessage = CommentAttrs & MessageAttrs;
