@@ -41,9 +41,7 @@ program.command('write')
   .requiredOption('-i, --input <path>', 'input JSON file')
   .requiredOption('-t, --type <type>', 'asset data type (e.g. TextLocalizationResource)')
   .requiredOption('-o, --output <path>', 'output asset file')
-  .option('-c, --config <path>', 'JSON file with engine config options',
-    value => JSON.parse(readFileSync(value, { encoding: "utf8"})),
-    {})
+  .option('-c, --config <path>', 'JSON file with engine config options', loadConfig, {})
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   .action(({ input, output, type, config }) => {
     const value = JSON.parse(readFileSync(input, { encoding: "utf8" }));
