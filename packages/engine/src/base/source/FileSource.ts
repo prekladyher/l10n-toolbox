@@ -90,6 +90,20 @@ export default class FileSource implements DataSource {
     }
   }
 
+  seek(offset: number): void {
+    if (offset < 0) {
+      throw new Error('EOF');
+    }
+    const bufferStart = this.filePosition - this.bufferLength;
+    if (offset > bufferStart && offset < this.filePosition) {
+      this.bufferOffset = offset - bufferStart;
+    } else {
+      this.filePosition = offset;
+      this.bufferOffset = 0;
+      this.bufferLength = 0;
+    }
+  }
+
   close(): void {
     closeSync(this.fileDesc);
   }

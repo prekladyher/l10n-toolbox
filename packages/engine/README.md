@@ -6,6 +6,7 @@ File manipulation is done via registered type handlers that are capable of conve
 
 Exported ESM subpaths are:
 
+* `anvil` - common data types for Anvil Engine
 * `base` - basic parsing and writing infrastructure together with all the necessary type declarations
 * `unity` - common data types for Unity game engine
 * `unreal` - common data types for Unreal Engine

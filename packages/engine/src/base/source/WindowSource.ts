@@ -21,6 +21,10 @@ export default class WindowSource implements DataSource {
     return this.source.skip(length);
   }
 
+  seek(offset: number): void {
+    throw new Error('unsupported operation');
+  }
+
   close(): void {
     // nothing to close
   }

@@ -26,6 +26,13 @@ export default class BufferSource implements DataSource {
     this.position += length;
   }
 
+  seek(offset: number): void {
+    if (offset < 0 || offset > this.buffer.length) {
+      throw new Error('EOF');
+    }
+    this.position = offset;
+  }
+
   close(): void {
     // nothing to close
   }
