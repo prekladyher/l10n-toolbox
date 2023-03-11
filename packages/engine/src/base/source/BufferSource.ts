@@ -5,9 +5,7 @@ import DataSource from './DataSource.js';
  */
 export default class BufferSource implements DataSource {
 
-  private position = 0;
-
-  constructor(private buffer: Buffer) {
+  constructor(private buffer: Buffer, private position = 0) {
   }
 
   read(length: number): Buffer {

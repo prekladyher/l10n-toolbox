@@ -4,7 +4,7 @@ import { defineStruct } from '../../base/types/defineStruct.js';
 import { TypeHandler } from '../../base/types/TypeHandler.js';
 import { TypeFactory, TypeRegistry } from '../../base/types/TypeRegistry.js';
 
-type PersistedType = {
+export type PersistedType = {
   FileHeader: {
     Magic: string,
     Unknown1: number,
@@ -50,7 +50,7 @@ type PersistedType = {
 };
 
 // https://github.com/theawesomecoder61/Blacksmith/blob/master/Blacksmith/FileTypes/Forge.cs
-const ForgeFile: TypeFactory<any> = (config, resolve) => {
+const ForgeFile: TypeFactory<PersistedType> = (config, resolve) => {
 
   const FileHeader: TypeHandler<PersistedType['FileHeader']> = defineStruct([
     { name: 'Magic', type: defineBuffer(8, 'ascii'), assert: checkStrict('scimitar') },
@@ -97,12 +97,6 @@ const ForgeFile: TypeFactory<any> = (config, resolve) => {
     { name: 'Timestamp', type: 'int32' },
     { name: 'Name', type: defineBuffer(128, 'utf-8') },
     { name: 'Unknown4', type: defineBuffer(20) },
-  ], resolve);
-
-  const EntryHeader = defineStruct([
-    { name: 'Identifier', type: 'int64' },
-    { name: 'Version', type: 'int16' },
-    { name: 'Compression', type: 'uint8' },
   ], resolve);
 
   return {
