@@ -21,7 +21,7 @@ program
   .option('-o, --output <path>', 'write to file instead of stdout')
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   .action(async ({ input, type, config, select, depth, json, output }) => {
-    const value = withFileSource(input, source => {
+    const value = await withFileSource(input, async source => {
       const resolve = createResolver(registerTypes());
       return resolve(type).read(source);
     });
@@ -43,9 +43,9 @@ program.command('write')
   .requiredOption('-o, --output <path>', 'output asset file')
   .option('-c, --config <path>', 'JSON file with engine config options', loadConfig, {})
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  .action(({ input, output, type, config }) => {
+  .action(async ({ input, output, type, config }) => {
     const value = JSON.parse(readFileSync(input, { encoding: "utf8" }));
-    withFileSink(output, sink => {
+    await withFileSink(output, async sink => {
       const resolve = createResolver(registerTypes());
       resolve(type).write(value).forEach(buffer => sink.write(buffer));
     });

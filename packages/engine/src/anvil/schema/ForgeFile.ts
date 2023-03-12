@@ -46,7 +46,8 @@ export type PersistedType = {
     Timestamp: number,
     Name: string,
     Unknown4: Buffer,
-  }[]
+  }[],
+  DataTable: Buffer[]
 };
 
 // https://github.com/theawesomecoder61/Blacksmith/blob/master/Blacksmith/FileTypes/Forge.cs
@@ -132,7 +133,8 @@ const ForgeFile: TypeFactory<PersistedType> = (config, resolve) => {
         MainHeader: mainHeader,
         DataHeader: dataHeader,
         IndexTable: indexTable,
-        NameTable: nameTable
+        NameTable: nameTable,
+        DataTable: [] // lazy
       };
     },
     write: value => {

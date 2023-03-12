@@ -20,7 +20,7 @@ program
   .option('-j, --json', 'return as valid raw JSON')
   .option('-o, --output <path>', 'write to file instead of stdout')
   .action(async ({ input, type, config, select, depth, json, output }) => {
-    const value = withFileSource(input, source => {
+    const value = await withFileSource(input, async source => {
       const resolve = createResolver(registerTypes(config));
       return resolve(type).read(source);
     });
@@ -41,9 +41,9 @@ program.command('write')
   .requiredOption('-t, --type <type>', 'asset data type (e.g. LanguageSourceAsset)')
   .requiredOption('-o, --output <path>', 'output asset file')
   .option('-c, --config <path>', 'JSON file with engine config options', loadConfig, {})
-  .action(({ input, output, type, config }) => {
+  .action(async ({ input, output, type, config }) => {
     const value = JSON.parse(readFileSync(input, { encoding: "utf8" }));
-    withFileSink(output, sink => {
+    await withFileSink(output, async sink => {
       const resolve = createResolver(registerTypes(config));
       resolve(type).write(value).forEach(buffer => sink.write(buffer));
     });

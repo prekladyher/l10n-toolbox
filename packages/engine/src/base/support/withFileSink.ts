@@ -3,10 +3,10 @@ import { FileSink } from '../source/index.js';
 /**
  * Execute task with data sink for the specified filename.
  */
-export function withFileSink(filename: string, task: (sink: FileSink) => void) {
+export async function withFileSink(filename: string, task: (sink: FileSink) => Promise<void>) {
   const sink = new FileSink(filename);
   try {
-    task(sink);
+    await task(sink);
   } finally {
     sink.close();
   }
