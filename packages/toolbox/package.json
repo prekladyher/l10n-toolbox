@@ -13,7 +13,8 @@
   "dependencies": {
     "@prekladyher/l10n-toolbox-engine": "2.0.0",
     "@prekladyher/l10n-toolbox-gettext": "2.0.0",
-    "@prekladyher/node-oodle-data": "^1.1.1",
+    "@prekladyher/node-oodle-data": "^1.1.2",
+    "buffer-crc32": "^0.2.13",
     "chalk": "^5.2.0",
     "commander": "^9.4.1",
     "fast-glob": "^3.2.12"

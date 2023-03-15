@@ -10,6 +10,7 @@ export interface ReadFn<T> {
    * @param source Binary data source.
    * @return Deserialized type value.
    */
+  // TODO allow passing context
   (source: DataSource): T;
 
 }
@@ -24,6 +25,7 @@ export interface WriteFn {
    * @param value Value to serialize, i.e. convert to byte buffer(s).
    * @return Serialized type value in one or more byte buffers.
    */
+  // TODO allow passing context
   (value: unknown): Buffer[];
 
 }
