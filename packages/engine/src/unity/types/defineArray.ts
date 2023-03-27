@@ -25,11 +25,11 @@ function defineUint8Array(): TypeHandler<number[]> {
 /**
  * Create handler for array type with the specified item type.
  */
-export function defineArray(itemKey: TypeKey, resolve: TypeResolver): TypeHandler<unknown[]> {
+export function defineArray(itemKey: TypeKey|TypeHandler<unknown>, resolve: TypeResolver): TypeHandler<unknown[]> {
   if (itemKey === 'uint8') {
     return defineUint8Array();
   }
-  const itemType = resolve(itemKey);
+  const itemType = typeof itemKey === 'string' ? resolve(itemKey) : itemKey;
   return {
     read: source => {
       const length = source.read(4).readUInt32LE();

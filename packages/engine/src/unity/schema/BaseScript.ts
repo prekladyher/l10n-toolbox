@@ -23,6 +23,19 @@ const Vector2f = registerStruct([
   { name: 'y', type: 'float' },
 ]);
 
+const Vector3f = registerStruct([
+  { name: 'x', type: 'float' },
+  { name: 'y', type: 'float' },
+  { name: 'z', type: 'float' },
+]);
+
+const Vector4f = registerStruct([
+  { name: 'x', type: 'float' },
+  { name: 'y', type: 'float' },
+  { name: 'z', type: 'float' },
+  { name: 'w', type: 'float' },
+]);
+
 const Rectf = registerStruct([
   { name: 'x', type: 'float' },
   { name: 'y', type: 'float' },
@@ -51,6 +64,8 @@ export default function registerTypes(): TypeRegistry {
     Base,
     PPtr,
     Vector2f,
+    Vector3f,
+    Vector4f,
     Rectf,
     ColorRGBA,
     UnityEvent,
