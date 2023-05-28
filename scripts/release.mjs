@@ -76,9 +76,11 @@ async function main() {
     process.exit(1);
   }
 
+  const NPM_COMMAND = process.platform === 'win32' ? 'npm.cmd' : 'npm';
+
   if (test) {
     report('Running tests');
-    await exec('npm', 'run', 'test');
+    await exec(NPM_COMMAND, 'run', 'test');
   }
 
   report(`Updating package version from ${chalk.red(sourceVersion)} to ${chalk.green(targetVersion)}`);
@@ -97,7 +99,7 @@ async function main() {
   }
 
   report('Updating package-lock.json file');
-  await exec('npm', 'install');
+  await exec(NPM_COMMAND, 'install');
 
   report(`Creating git commit and tag ${chalk.green(releaseName)}`);
   await exec(
@@ -111,7 +113,7 @@ async function main() {
   await exec('git', 'tag', '-m', `Release ${releaseName}`, releaseName);
 
   report('Running clean build before publishing');
-  await exec('npm', 'run', 'build');
+  await exec(NPM_COMMAND, 'run', 'build');
 
   if (publish) {
     report(`Pushing git commit and tag`);
@@ -120,7 +122,7 @@ async function main() {
 
   if (publish) {
     report(`Publishing to npm registry`);
-    await exec('npm', 'publish', '-ws');
+    await exec(NPM_COMMAND, 'publish', '-ws');
   }
 }
 
