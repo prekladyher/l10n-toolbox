@@ -36,13 +36,14 @@ export function encodeEntry(entry: PoMessage) {
 
 /**
  * Encode single PO entry attribute.
+ * Line wrapping is consistent with `xgettext --no-wrap`.
  */
 export function encodeAttribute(name: string, value: string) {
   if (value === '') {
     return `${name} ""`; // Empty attribute corner case
   }
   const encoded = encodeValue(value);
-  if (name === 'msgstr' || encoded.length > 1) {
+  if (encoded.length > 1) {
     return `${name} ""\n"${encoded.join('"\n"')}"`;
   }
   return `${name} "${encoded[0]}"`;

@@ -21,9 +21,11 @@ describe('PO file library', async () => {
     expect(decodeEntry(TEST_FILE)).toEqual(TEST_ENTRY);
   });
 
-  it('encodes as Lokalize', function() {
+  it('encodes as xgettext --no-wrap', function() {
     expect(encodeEntries([{ msgid: '', msgstr: 'foo\n' }]))
-      .toBe(`msgid ""\nmsgstr ""\n"foo\\n"\n`);
+      .toBe(`msgid ""\nmsgstr "foo\\n"\n`);
+    expect(encodeEntries([{ msgid: '', msgstr: 'foo\n\n' }]))
+      .toBe(`msgid ""\nmsgstr ""\n"foo\\n"\n"\\n"\n`);
     expect(encodeEntries([{ msgid: '', msgstr: 'foo\nbar\n' }]))
       .toBe(`msgid ""\nmsgstr ""\n"foo\\n"\n"bar\\n"\n`);
   });
