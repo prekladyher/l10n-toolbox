@@ -1,5 +1,5 @@
 import { AnvilTypes, ForgeData, registerTypes } from '@prekladyher/l10n-toolbox-engine/anvil';
-import { createResolver, TypeHandler, withFileHandle, withFileSource } from '@prekladyher/l10n-toolbox-engine/base';
+import { TypeHandler, createResolver, withFileHandle, withFileSource } from '@prekladyher/l10n-toolbox-engine/base';
 import { createCommand } from 'commander';
 import { copyFile, readFile, stat, writeFile } from 'fs/promises';
 import { join } from 'node:path';
@@ -87,13 +87,13 @@ program
   .requiredOption('-s, --source <path>', 'source asset data file')
   .requiredOption('-t, --target <path>', 'path for the created asset bundle')
   .option('-u, --uncompressed', 'ignore asset compression', false)
+  .option('-d, --data', 'interpret source as raw data', false)
   .option('-e, --erase', 'erase (zero out) original data', false)
-  .action(async ({ input, assetId, source, target, uncompressed, erase }) => {
+  .action(async ({ input, assetId, source, target, uncompressed, erase, data }) => {
     // Prepare resolver and data handlers
     const resolve = createResolver(registerTypes());
     const ForgeFile = resolve('ForgeFile') as TypeHandler<AnvilTypes.ForgeFile>;
     const ForgeDataPart = resolve('ForgeDataPart') as TypeHandler<AnvilTypes.ForgeData['DataParts'][number]>;
-    const ForgeDataFile = resolve('ForgeDataFile') as TypeHandler<AnvilTypes.ForgeDataFile>;
     // Read forge file header
     const bundle = await withFileSource(input, async source => ForgeFile.read(source));
     // Find asset index
@@ -110,8 +110,15 @@ program
     });
     // Read and prepare final override asset data
     const overrideSource = await readFile(source);
-    encodeDataPart(assetData.DataParts[0], overrideSource.subarray(0, 16), true);
-    encodeDataPart(assetData.DataParts[1], overrideSource.subarray(16));
+    if (data) {
+      const ForgeDataFile = resolve('ForgeDataFile') as TypeHandler<AnvilTypes.ForgeDataFile>;
+      const overrideAsset = Buffer.concat(ForgeDataFile.write({ FileDataID: assetId, EntryData: overrideSource }));
+      encodeDataPart(assetData.DataParts[0], overrideAsset.subarray(0, 16), true);
+      encodeDataPart(assetData.DataParts[1], overrideAsset.subarray(16), uncompressed);
+    } else {
+      encodeDataPart(assetData.DataParts[0], overrideSource.subarray(0, 16), true);
+      encodeDataPart(assetData.DataParts[1], overrideSource.subarray(16), uncompressed);
+    }
     const overrideData = ForgeData.writeForgeData(assetData, ForgeDataPart);
     // Create target copy of the asset bundle
     const fileInfo = await stat(input);
@@ -133,7 +140,7 @@ program
   .command('read')
   .description('Extract Anvil asset data into JSON-like model')
   .requiredOption('-i, --input <path>', 'input data file')
-  .requiredOption('-t, --type <type>', 'asset data type (e.g. LanguageSourceAsset)')
+  .requiredOption('-t, --type <type>', 'asset data type (e.g. ForgeDataFile)')
   .option('-s, --select <path>', 'JSON path transform (e.g. $.mSource.mTerms[*].Term)')
   .option('-d, --depth <depth>', 'inspection path depth', value => parseInt(value, 10), Infinity)
   .option('-j, --json', 'return as valid raw JSON')
