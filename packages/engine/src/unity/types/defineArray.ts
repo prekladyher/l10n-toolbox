@@ -45,8 +45,12 @@ export function defineArray(itemKey: TypeKey, resolve: TypeResolver): TypeHandle
       length.writeUInt32LE(values.length || 0);
       const buffers = [length];
       if (values) {
-        for (const value of values) {
-          buffers.push(...itemType.write(value));
+        for (let i = 0; i < values.length; i++) {
+          try {
+            buffers.push(...itemType.write(values[i]));
+          } catch (error) {
+            throw new Error(`Error writing array entry ${i}`, { cause: error });
+          }
         }
       }
       return buffers;

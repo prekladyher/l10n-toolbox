@@ -1,6 +1,6 @@
 import { TypeHandler } from './TypeHandler.js';
 import { TypeFactory } from './TypeRegistry.js';
-import { TypeResolver, TypeKey } from './TypeResolver.js';
+import { TypeKey, TypeResolver } from './TypeResolver.js';
 
 /**
  * Struct type schema.
@@ -81,7 +81,11 @@ export function defineStruct<R = StructType>(schema: StructSchema, resolve: Type
         const value = member.name && member.name in struct
           ? (struct as Record<string, unknown>)[member.name]
           : member.value;
-        return handlers[idx].write(value);
+        try {
+          return handlers[idx].write(value);
+        } catch (error) {
+          throw new Error(`Error writing ${member.name} property`, { cause: error });
+        }
       });
     }
   };

@@ -2,11 +2,11 @@
   "compilerOptions": {
     "allowJs": true,
     "forceConsistentCasingInFileNames": true,
-    "lib": ["ES2021"],
-    "module": "Node16",
+    "lib": ["ES2022"],
+    "module": "NodeNext",
     "moduleResolution": "Node16",
     "skipLibCheck": true,
     "strict": true,
-    "target": "ES2021",
+    "target": "ES2022",
   }
 }

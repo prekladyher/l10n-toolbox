@@ -18,8 +18,12 @@ export function defineArray<T>(itemType: TypeHandler<T>): TypeHandler<T[]> {
       const length = Buffer.alloc(4);
       length.writeUInt32LE(values.length);
       const buffers = [length];
-      for (const value of values) {
-        buffers.push(...itemType.write(value));
+      for (let i = 0; i < values.length; i++) {
+        try {
+          buffers.push(...itemType.write(values[i]));
+        } catch (error) {
+          throw new Error(`Error writing array entry ${i}`, { cause: error });
+        }
       }
       return buffers;
     }
